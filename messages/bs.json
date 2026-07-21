@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "mainNav": "Glavna navigacija",
+    "home": "Početna",
+    "about": "O nama",
+    "services": "Usluge",
+    "pricing": "Članarine i cijene",
+    "pricingShort": "Cijene",
+    "team": "Naš tim",
+    "schedule": "Termini",
+    "partners": "Partneri",
+    "contact": "Kontakt",
+    "quiz": "Pronađi svoj program",
+    "openMenu": "Otvori meni",
+    "closeMenu": "Zatvori meni"
+  },
+  "cta": {
+    "call": "Pozovi",
+    "bookSchedule": "Pogledaj termine",
+    "readMore": "Saznaj više",
+    "seeAllServices": "Pogledaj sve usluge",
+    "seePricing": "Pogledaj cjenovnik"
+  },
+  "footer": {
+    "tagline": "Zbog sebe.",
+    "addressLabel": "Adresa",
+    "phoneLabel": "Telefon",
+    "instagramLabel": "Instagram",
+    "navTitle": "Sajt",
+    "legalTitle": "Pravno",
+    "privacy": "Politika privatnosti",
+    "terms": "Uslovi korištenja",
+    "rights": "Sva prava zadržana."
+  },
+  "language": {
+    "label": "Jezik",
+    "bos": "BOS",
+    "hrv": "HRV",
+    "srp": "SRP",
+    "en": "EN"
+  },
+  "notFound": {
+    "eyebrow": "Greška 404",
+    "title": "Ovdje nema treninga.",
+    "description": "Stranica koju tražiš je premještena, obrisana ili nikad nije ni postojala. Vrati se na početnu i nastavi odatle.",
+    "cta": "Nazad na početnu"
+  },
+  "consent": {
+    "text": "Koristimo kolačiće samo za osnovnu analitiku posjeta, i to isključivo uz tvoj pristanak.",
+    "link": "Politika privatnosti",
+    "accept": "Prihvatam",
+    "decline": "Odbijam"
+  }
+}

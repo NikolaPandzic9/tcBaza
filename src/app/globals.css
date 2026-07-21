@@ -1,0 +1,97 @@
+@import "tailwindcss";
+
+/*
+ * Design tokens for Trening centar Baza.
+ * Navy and accent values are pixel-sampled from the client's real logo
+ * and staff apparel (not eyeballed) — see HANDOVER.md for provenance.
+ * Accent-500 is reserved for dark backgrounds/non-text use only: it
+ * measures ~2.1:1 contrast on white (fails WCAG AA). accent-ink-700 is
+ * the same hue darkened for AA-safe accent text on light backgrounds.
+ */
+@theme {
+  --color-navy-950: #0f1e3d;
+  --color-navy-900: #152c54;
+  --color-navy-700: #1a3665;
+  --color-navy-500: #2c4c86;
+  --color-navy-300: #7c93bb;
+  --color-navy-100: #e4e9f2;
+  --color-navy-50: #f4f6fa;
+
+  --color-accent-500: #a6be12;
+  /* Darkened past the initial estimate: measured 4.39:1 on navy-50
+     (fails AA); this shade measures ~5.5:1 on navy-50 and higher still
+     on white. */
+  --color-accent-ink-700: #5f6a0d;
+  --color-accent-100: #f2f5d9;
+
+  --color-charcoal-950: #0e1116;
+  --color-charcoal-900: #14171c;
+  --color-charcoal-700: #3a3f47;
+  /* Darkened from the initial #6b7280 (measured 4.46:1 on navy-50, just
+     under AA) — first pass (#64697a) still fell short on navy-100
+     (4.48:1). This shade clears 5:1 against navy-50, navy-100, and white. */
+  --color-charcoal-500: #5b6070;
+  --color-charcoal-300: #c3c7ce;
+  --color-charcoal-100: #edeef0;
+  --color-charcoal-50: #f7f8f9;
+
+  --color-status-free-text: #15803d;
+  --color-status-free-bg: #dcfce7;
+  --color-status-full-text: #b91c1c;
+  --color-status-full-bg: #fee2e2;
+  --color-status-cancelled-text: #52525b;
+  --color-status-cancelled-bg: #e4e4e7;
+  --color-status-soon-text: #b45309;
+  --color-status-soon-bg: #fef3c7;
+
+  --font-display: var(--font-display), Oswald, sans-serif;
+  --font-body: var(--font-body), system-ui, sans-serif;
+
+  /* The single recurring visual motif: an 8-degree diagonal cut, echoing
+     the logo's sheared letterforms. Shared by AngledDivider and any
+     component that clips a corner instead of rounding it. */
+  --motif-cut-angle: 8deg;
+}
+
+/* The recurring "diagonal cut" motif: one sheared corner instead of a
+   rounded one, echoing the logo's angled letterforms. Two sizes cover
+   small controls (buttons, chips) and larger surfaces (cards, media). */
+@utility clip-corner {
+  clip-path: polygon(0 0, calc(100% - 0.75rem) 0, 100% 0.75rem, 100% 100%, 0 100%);
+}
+
+@utility clip-corner-lg {
+  clip-path: polygon(0 0, calc(100% - 1.75rem) 0, 100% 1.75rem, 100% 100%, 0 100%);
+}
+
+@layer base {
+  * {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      scroll-behavior: auto;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+
+    /* Motion (BOGAT hero/quiz animations) sets opacity/transform via
+       inline styles, which the blanket rule above can't reach — it also
+       starts every reveal at opacity:0 on the server (matching the
+       reduced-motion check's SSR-safe default of "false") until client
+       JS confirms the real preference and corrects it. Without this,
+       reduced-motion visitors can briefly see genuinely invisible
+       content while hydration catches up. */
+    .motion-reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
+
+  ::selection {
+    background-color: var(--color-accent-500);
+    color: var(--color-navy-950);
+  }
+}

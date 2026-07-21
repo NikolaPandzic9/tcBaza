@@ -1,0 +1,54 @@
+{
+  "nav": {
+    "mainNav": "Main navigation",
+    "home": "Home",
+    "about": "About",
+    "services": "Services",
+    "pricing": "Membership & Pricing",
+    "pricingShort": "Pricing",
+    "team": "Our Team",
+    "schedule": "Schedule",
+    "partners": "Partners",
+    "contact": "Contact",
+    "quiz": "Find your program",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu"
+  },
+  "cta": {
+    "call": "Call us",
+    "bookSchedule": "View schedule",
+    "readMore": "Learn more",
+    "seeAllServices": "See all services",
+    "seePricing": "See pricing"
+  },
+  "footer": {
+    "tagline": "For yourself.",
+    "addressLabel": "Address",
+    "phoneLabel": "Phone",
+    "instagramLabel": "Instagram",
+    "navTitle": "Site",
+    "legalTitle": "Legal",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use",
+    "rights": "All rights reserved."
+  },
+  "language": {
+    "label": "Language",
+    "bos": "BOS",
+    "hrv": "HRV",
+    "srp": "SRP",
+    "en": "EN"
+  },
+  "notFound": {
+    "eyebrow": "404 error",
+    "title": "No training happening here.",
+    "description": "The page you're looking for was moved, deleted, or never existed. Head back to the homepage and start again from there.",
+    "cta": "Back to homepage"
+  },
+  "consent": {
+    "text": "We only use cookies for basic visit analytics, and only with your consent.",
+    "link": "Privacy Policy",
+    "accept": "Accept",
+    "decline": "Decline"
+  }
+}
