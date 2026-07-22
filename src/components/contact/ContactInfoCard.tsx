@@ -1,4 +1,4 @@
-import { MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/routing";
 import { BUSINESS } from "@/lib/constants";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
@@ -26,6 +26,16 @@ export function ContactInfoCard({ locale }: ContactInfoCardProps) {
             {BUSINESS.address.street}
             <br />
             {BUSINESS.address.city}, {BUSINESS.address.country}
+          </span>
+        </p>
+
+        <p className="flex items-center gap-3">
+          <Clock className="size-5 shrink-0" aria-hidden />
+          <span>
+            {BUSINESS.hours.opens}–{BUSINESS.hours.closes}{" "}
+            <span className="text-white/60">
+              ({locale === "bs" ? "svaki dan" : "every day"})
+            </span>
           </span>
         </p>
 

@@ -1,4 +1,4 @@
-import { MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { BUSINESS } from "@/lib/constants";
@@ -86,6 +86,10 @@ export function Footer() {
             <Phone className="size-4" aria-hidden />
             {BUSINESS.phone}
           </a>
+          <p className="mt-3 flex items-center gap-2">
+            <Clock className="size-4 shrink-0" aria-hidden />
+            {BUSINESS.hours.opens}–{BUSINESS.hours.closes} ({t("footer.hoursEveryDay")})
+          </p>
         </div>
       </Container>
 

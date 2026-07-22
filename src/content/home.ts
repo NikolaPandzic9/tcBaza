@@ -16,13 +16,42 @@ export const HERO = {
 export const USP = {
   eyebrow: { bs: "Zašto Baza", en: "Why Baza" } satisfies Localized,
   headline: {
-    bs: "Plan koji poznaje tvoje tijelo prije prvog treninga.",
-    en: "A plan that knows your body before your first session.",
+    bs: "Zašto Baza?",
+    en: "Why Baza?",
   } satisfies Localized,
-  body: {
-    bs: "Svaki novi član prolazi inicijalno testiranje — mjerenje snage, mobilnosti i eksplozivnosti — prije nego što dobije svoj plan. Tako trening ima smisla od prvog dana, umjesto da se prilagođava usput.",
-    en: "Every new member goes through an initial assessment — strength, mobility, and power testing — before receiving their plan. That way training makes sense from day one, instead of being adjusted along the way.",
-  } satisfies Localized,
+  reasons: [
+    {
+      title: {
+        bs: "Grupni treninzi sa personalizovanim planom",
+        en: "Group training with a personalized plan",
+      },
+      body: {
+        bs: "Treniraš u maloj grupi (do 5 ljudi), ali ne radite svi iste vježbe. Svaki član dobija svoj individualni program napravljen na osnovu dijagnostike.",
+        en: "You train in a small group (up to 5 people), but you don't all do the same exercises. Every member gets their own individual program built from real diagnostics.",
+      },
+    },
+    {
+      title: { bs: "Tim od 5 stručnjaka", en: "A team of 5 specialists" },
+      body: {
+        bs: "Naš tim čine posvećeni treneri koji prate svaki tvoj pokret, osiguravaju pravilnu izvedbu i vode te kroz tvoj lični napredak.",
+        en: "Our team is made up of dedicated trainers who track your every move, keep your form correct, and guide you through your personal progress.",
+      },
+    },
+    {
+      title: { bs: "Precizna dijagnostika", en: "Precise diagnostics" },
+      body: {
+        bs: "Ne nagađamo, već mjerimo. Svaki proces počinje detaljnom procjenom mobilnosti, snage i motorike kako bismo kreirali program baš za tebe.",
+        en: "We don't guess, we measure. Every process starts with a detailed assessment of mobility, strength, and motor skills so we can build a program made just for you.",
+      },
+    },
+    {
+      title: { bs: "Maksimalna posvećenost", en: "Maximum dedication" },
+      body: {
+        bs: "Spajamo energiju i motivaciju rada u grupi sa preciznošću i pažnjom personalnog treninga.",
+        en: "We combine the energy and motivation of group training with the precision and attention of personal training.",
+      },
+    },
+  ] satisfies { title: Localized; body: Localized }[],
 };
 
 export const SCHEDULE_TEASER = {
@@ -56,8 +85,8 @@ export const INSTAGRAM_TEASER = {
 
 export const FINAL_CTA = {
   headline: {
-    bs: "Prvi korak je testiranje. Drugi je tvoj plan.",
-    en: "The first step is testing. The second is your plan.",
+    bs: "Izgradi svoju Bazu. Napravi promjenu — zbog sebe.",
+    en: "Build your Baza. Make a change — for yourself.",
   } satisfies Localized,
   body: {
     bs: "Javi se i dogovori inicijalno testiranje — bez obaveze, bez pritiska.",

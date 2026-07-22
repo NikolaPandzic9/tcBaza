@@ -3,15 +3,25 @@ import type { Localized } from "./programs";
 export const ABOUT_HERO = {
   eyebrow: { bs: "O nama", en: "About us" } satisfies Localized,
   headline: {
-    bs: "Baza je izgrađena oko jedne ideje.",
-    en: "Baza is built around one idea.",
+    bs: "Dobrodošli u Baza Trening Centar",
+    en: "Welcome to Baza Training Center",
+  } satisfies Localized,
+  tagline: {
+    bs: "Investiraj u svoju snagu, zdravlje i pokret — zbog sebe.",
+    en: "Invest in your strength, health, and movement — for yourself.",
   } satisfies Localized,
 };
 
-export const ABOUT_INTRO: Localized = {
-  bs: "Baza je trening centar specijalizovan za personalizovane grupne treninge. Koncept rada zasniva se na malim grupama od maksimalno 5 članova, gdje svaki član dobija individualni plan treninga izrađen nakon inicijalnog testiranja.",
-  en: "Baza is a training center built around personalized group training. The concept is simple: small groups of a maximum of 5 members, where each member gets an individual training plan built after an initial assessment.",
-};
+export const ABOUT_INTRO: Localized[] = [
+  {
+    bs: "U Bazi ne vjerujemo u improvizaciju, površne pristupe i šablonske treninge u kojima si samo broj. Stvorili smo prostor u kom treniraš u maloj grupi, ali potpuno po svom planu i programu, prilagođenom tvojim ciljevima i mogućnostima.",
+    en: "At Baza, we don't believe in improvisation, superficial approaches, or cookie-cutter workouts where you're just a number. We've built a space where you train in a small group, but entirely on your own plan and program, tailored to your goals and abilities.",
+  },
+  {
+    bs: "Bilo da si profesionalni sportista koji traži veću eksplozivnost, ili rekreativac koji želi tijelo bez bola, pune snage i energije — radimo pametno, vođeno i zbog sebe.",
+    en: "Whether you're a competitive athlete chasing more explosive power, or you're training for yourself and want a body free of pain, full of strength and energy — we work smart, guided, and for yourself.",
+  },
+];
 
 export const ABOUT_CHARACTERISTICS: Localized[] = [
   {

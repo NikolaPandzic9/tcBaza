@@ -109,4 +109,24 @@ export const PROGRAM_DETAILS: Record<ProgramSlug, ProgramDetail> = {
       },
     },
   },
+  "online-program": {
+    longDescription: {
+      bs: "Za one koji ne mogu redovno dolaziti u prostor Baze, ali i dalje žele plan izrađen za njih — ne generički šablon. Za detalje o sadržaju i cijeni kontaktiraj nas direktno.",
+      en: "For anyone who can't make it to the Baza space regularly, but still wants a plan built for them — not a generic template. Contact us directly for details on content and pricing.",
+    },
+    features: [
+      {
+        bs: "Trening plan prilagođen tvojim ciljevima",
+        en: "A training plan tailored to your goals",
+      },
+      {
+        bs: "Praćenje napretka na daljinu",
+        en: "Remote progress tracking",
+      },
+    ],
+    // No dedicated photo for the online program yet — falls back to the
+    // motif treatment in ProgramDetailTemplate, same as any program
+    // without a real client photo.
+    image: null,
+  },
 };

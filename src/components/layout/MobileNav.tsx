@@ -28,7 +28,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex lg:hidden">
+    <div className="fixed inset-0 z-50 flex xl:hidden">
       <div className="absolute inset-0 bg-charcoal-950/60" onClick={onClose} />
       <nav
         aria-label={t("mainNav")}

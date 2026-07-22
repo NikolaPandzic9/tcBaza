@@ -1,7 +1,7 @@
 import { getSiteSettings, getTermini } from "@/sanity/queries";
 import type { Locale } from "@/i18n/routing";
 import { SCHEDULE_TEASER } from "@/content/home";
-import { BUSINESS } from "@/lib/constants";
+import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { LinkButton } from "@/components/ui/LinkButton";
@@ -49,12 +49,9 @@ export async function ScheduleTeaser({ locale }: ScheduleTeaserProps) {
         ) : (
           <div className="mt-10 clip-corner-lg bg-white p-8 text-center shadow-sm ring-1 ring-charcoal-200 sm:p-12">
             <p className="text-charcoal-500">{SCHEDULE_TEASER.emptyState[locale]}</p>
-            <a
-              href={BUSINESS.phoneHref}
-              className="mt-4 inline-block font-display text-sm uppercase tracking-wide text-navy-700 underline decoration-accent-500 decoration-2 underline-offset-4"
-            >
-              {BUSINESS.phone}
-            </a>
+            <div className="mt-5 flex justify-center">
+              <BookingContactMenu locale={locale} />
+            </div>
           </div>
         )}
       </Container>

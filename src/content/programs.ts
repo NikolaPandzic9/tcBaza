@@ -4,7 +4,8 @@ export type ProgramSlug =
   | "rekreativci"
   | "sportisti"
   | "komercijalna-teretana"
-  | "kik-boks";
+  | "kik-boks"
+  | "online-program";
 
 export interface Localized {
   bs: string;
@@ -111,6 +112,24 @@ export const PROGRAMS: Program[] = [
         // Not published by the client — never invent a figure here.
         price: null,
         sessionsPerWeek: 3,
+      },
+    ],
+  },
+  {
+    slug: "online-program",
+    href: "/usluge/online-program",
+    name: { bs: "Online program", en: "Online program" },
+    shortPitch: {
+      bs: "Trening plan i praćenje napretka na daljinu, za sve koji ne mogu redovno u prostor Baze.",
+      en: "A training plan and progress tracking, remotely — for anyone who can't make it to the Baza space regularly.",
+    },
+    tiers: [
+      {
+        id: "online-program",
+        label: { bs: "Mjesečni program", en: "Monthly program" },
+        // Not published by the client yet — never invent a figure here.
+        price: null,
+        sessionsPerWeek: null,
       },
     ],
   },

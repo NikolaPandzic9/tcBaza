@@ -34,7 +34,7 @@ export function Header() {
 
           <nav
             aria-label={t("mainNav")}
-            className="hidden items-center gap-5 lg:flex"
+            className="hidden items-center gap-4 xl:flex"
           >
             {NAV_LINKS.map((link) => {
               const active = isNavLinkActive(pathname, link.href);
@@ -44,7 +44,7 @@ export function Header() {
                   href={link.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "relative py-1 text-sm font-semibold uppercase tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-accent-500 after:transition-all",
+                    "relative whitespace-nowrap py-1 text-sm font-semibold uppercase tracking-wide transition-colors after:absolute after:-bottom-1 after:left-0 after:h-0.5 after:bg-accent-500 after:transition-all",
                     active
                       ? "text-accent-500 after:w-full"
                       : "text-white/80 after:w-0 hover:text-white hover:after:w-full",
@@ -69,7 +69,7 @@ export function Header() {
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label={t("openMenu")}
-              className="p-2 text-white lg:hidden"
+              className="p-2 text-white xl:hidden"
             >
               <Menu className="size-6" aria-hidden />
             </button>

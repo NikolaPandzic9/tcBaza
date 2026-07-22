@@ -1,5 +1,6 @@
 import { Handshake } from "lucide-react";
 import type { Metadata } from "next";
+import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
 import { PARTNERS } from "@/content/partners";
@@ -46,7 +47,17 @@ export default async function PartnersPage({
               delayMs={index * 60}
               className="clip-corner-lg bg-white p-7 shadow-sm ring-1 ring-charcoal-200 transition-shadow hover:shadow-md"
             >
-              <Handshake className="size-8 text-accent-ink-700" aria-hidden />
+              {partner.logo ? (
+                <Image
+                  src={partner.logo}
+                  alt={partner.name}
+                  width={56}
+                  height={56}
+                  className="size-14 object-contain"
+                />
+              ) : (
+                <Handshake className="size-8 text-accent-ink-700" aria-hidden />
+              )}
               <h2 className="mt-4 font-display text-lg uppercase tracking-wide text-navy-900">
                 {partner.name}
               </h2>

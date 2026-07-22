@@ -34,6 +34,10 @@ export const routing = defineRouting({
       bs: "/usluge/kik-boks",
       en: "/services/kickboxing",
     },
+    "/usluge/online-program": {
+      bs: "/usluge/online-program",
+      en: "/services/online-program",
+    },
     "/usluge/oporavak": {
       bs: "/usluge/oporavak",
       en: "/services/recovery",
@@ -44,6 +48,10 @@ export const routing = defineRouting({
     "/rezervacija-termina": {
       bs: "/rezervacija-termina",
       en: "/schedule",
+    },
+    "/rezervacija-termina/komercijalna-teretana": {
+      bs: "/rezervacija-termina/komercijalna-teretana",
+      en: "/schedule/commercial-gym",
     },
     "/partneri": { bs: "/partneri", en: "/partners" },
     "/politika-privatnosti": {

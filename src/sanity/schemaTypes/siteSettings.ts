@@ -26,6 +26,10 @@ export const siteSettingsType = defineType({
     }),
   ],
   preview: {
-    prepare: () => ({ title: "Podešavanja sajta" }),
+    select: { terminiOn: "terminiSectionEnabled" },
+    prepare: ({ terminiOn }) => ({
+      title: "Podešavanja sajta",
+      subtitle: terminiOn ? "Termini: uključeni" : "Termini: isključeni",
+    }),
   },
 });

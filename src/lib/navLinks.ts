@@ -7,7 +7,10 @@ export type NavMessageKey =
   | "pricing"
   | "pricingShort"
   | "team"
-  | "schedule"
+  | "groupSchedule"
+  | "groupScheduleShort"
+  | "commercialGymSchedule"
+  | "commercialGymScheduleShort"
   | "contact"
   | "partners";
 
@@ -25,13 +28,38 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/usluge", messageKey: "services" },
   { href: "/clanarine-i-cijene", messageKey: "pricing", shortMessageKey: "pricingShort" },
   { href: "/nas-tim", messageKey: "team" },
-  { href: "/rezervacija-termina", messageKey: "schedule" },
+  {
+    href: "/rezervacija-termina",
+    messageKey: "groupSchedule",
+    shortMessageKey: "groupScheduleShort",
+  },
+  {
+    href: "/rezervacija-termina/komercijalna-teretana",
+    messageKey: "commercialGymSchedule",
+    shortMessageKey: "commercialGymScheduleShort",
+  },
   { href: "/partneri", messageKey: "partners" },
   { href: "/kontakt", messageKey: "contact" },
 ];
 
-/** "/usluge" also matches "/usluge/kik-boks" etc.; "/" only matches itself. */
+/**
+ * Picks the single longest (most specific) NAV_LINKS href matching the
+ * current pathname — needed because "/rezervacija-termina" would
+ * otherwise also prefix-match its own child route
+ * "/rezervacija-termina/komercijalna-teretana", highlighting both.
+ */
+function getActiveNavHref(pathname: string): Pathnames | null {
+  let best: Pathnames | null = null;
+  for (const link of NAV_LINKS) {
+    const matches =
+      link.href === "/" ? pathname === "/" : pathname === link.href || pathname.startsWith(`${link.href}/`);
+    if (matches && (best === null || link.href.length > best.length)) {
+      best = link.href;
+    }
+  }
+  return best;
+}
+
 export function isNavLinkActive(pathname: string, href: Pathnames): boolean {
-  if (href === "/") return pathname === "/";
-  return pathname === href || pathname.startsWith(`${href}/`);
+  return getActiveNavHref(pathname) === href;
 }

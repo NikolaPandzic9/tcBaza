@@ -43,7 +43,7 @@ export function TerminCard({ termin, locale }: TerminCardProps) {
         </span>
         <span className="flex items-center gap-1.5">
           <Users className="size-4 text-charcoal-500" aria-hidden />
-          {termin.spotsRemaining}/{termin.maxParticipants}
+          {termin.maxParticipants - termin.spotsRemaining}/{termin.maxParticipants}
         </span>
       </div>
 

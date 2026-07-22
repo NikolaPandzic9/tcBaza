@@ -48,7 +48,7 @@ export default async function AboutPage({
 
   const stats = [
     { value: "5", label: isBs ? "Maks. članova po grupi" : "Max members per group" },
-    { value: String(TEAM.length), label: isBs ? "Stručnjaka u timu" : "Specialists on the team" },
+    { value: String(TEAM.length), label: isBs ? "Ljudi u timu" : "People on the team" },
     {
       value: String(PROGRAMS.length + 1),
       label: isBs ? "Programa i usluga" : "Programs & services",
@@ -65,7 +65,16 @@ export default async function AboutPage({
               {ABOUT_HERO.headline[locale]}
             </h1>
             <span aria-hidden className="clip-corner mt-5 block h-1.5 w-20 bg-accent-500" />
-            <p className="mt-6 text-lg text-charcoal-500">{ABOUT_INTRO[locale]}</p>
+            <p className="mt-6 font-display text-lg uppercase tracking-wide text-accent-ink-700">
+              {ABOUT_HERO.tagline[locale]}
+            </p>
+            <div className="mt-4 space-y-4">
+              {ABOUT_INTRO.map((paragraph) => (
+                <p key={paragraph.bs} className="text-lg text-charcoal-500">
+                  {paragraph[locale]}
+                </p>
+              ))}
+            </div>
           </div>
 
           <AboutParallaxImage

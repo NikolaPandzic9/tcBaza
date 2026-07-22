@@ -19,6 +19,7 @@ export const BUSINESS = {
   },
   instagramUrl: "https://www.instagram.com/tc.baza",
   instagramHandle: "@tc.baza",
+  hours: { opens: "05:00", closes: "01:00" },
   // Not provided by the client — deliberately left unset rather than
   // invented. Guard with these booleans instead of empty-string checks.
   email: undefined as string | undefined,
@@ -28,3 +29,6 @@ export const BUSINESS = {
 
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.tcbaza.ba";
+
+/** wa.me requires the number with no "+" and no spaces. */
+export const WHATSAPP_NUMBER = BUSINESS.phone.replace(/\D/g, "");
