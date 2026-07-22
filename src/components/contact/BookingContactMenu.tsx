@@ -6,7 +6,11 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Locale } from "@/i18n/routing";
 import { BUSINESS, WHATSAPP_NUMBER } from "@/lib/constants";
-import { buttonBaseClasses, buttonVariantClasses } from "@/components/ui/buttonStyles";
+import {
+  buttonBaseClasses,
+  buttonVariantClasses,
+  type ButtonVariant,
+} from "@/components/ui/buttonStyles";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { WhatsAppIcon } from "@/components/ui/WhatsAppIcon";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
@@ -14,6 +18,7 @@ import { cn } from "@/lib/cn";
 
 interface BookingContactMenuProps {
   locale: Locale;
+  variant?: ButtonVariant;
   className?: string;
 }
 
@@ -33,7 +38,11 @@ const WHATSAPP_PREFILL = {
 // absolutely positioned ones — so an in-flow dropdown would get cut off
 // at the card's edge. Portaling (with a fixed-position, viewport-measured
 // panel) sidesteps that entirely.
-export function BookingContactMenu({ locale, className }: BookingContactMenuProps) {
+export function BookingContactMenu({
+  locale,
+  variant = "secondary",
+  className,
+}: BookingContactMenuProps) {
   const [open, setOpen] = useState(false);
   const [position, setPosition] = useState({ top: 0, left: 0, width: 0 });
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -129,7 +138,7 @@ export function BookingContactMenu({ locale, className }: BookingContactMenuProp
         onClick={toggleOpen}
         aria-haspopup="menu"
         aria-expanded={open}
-        className={cn(buttonBaseClasses, buttonVariantClasses.secondary, className)}
+        className={cn(buttonBaseClasses, buttonVariantClasses[variant], className)}
       >
         <CalendarCheck className="size-4" aria-hidden />
         {t.trigger}
@@ -147,7 +156,7 @@ export function BookingContactMenu({ locale, className }: BookingContactMenuProp
                 exit={reducedMotion ? undefined : { opacity: 0, y: -6, scale: 0.98 }}
                 transition={{ duration: 0.15, ease: "easeOut" }}
                 style={{ top: position.top, left: position.left, width: position.width }}
-                className="fixed z-50 clip-corner-lg bg-white p-2 shadow-lg ring-1 ring-charcoal-200"
+                className="fixed z-[60] clip-corner-lg bg-white p-2 shadow-lg ring-1 ring-charcoal-200"
               >
                 {options.map((option) => (
                   <a

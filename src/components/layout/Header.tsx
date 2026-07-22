@@ -1,12 +1,13 @@
 "use client";
 
-import { Menu, Phone } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Menu } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-import { BUSINESS } from "@/lib/constants";
+import type { Locale } from "@/i18n/routing";
 import { isNavLinkActive, NAV_LINKS } from "@/lib/navLinks";
 import { cn } from "@/lib/cn";
+import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Container } from "@/components/ui/Container";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Logo } from "./Logo";
@@ -14,6 +15,7 @@ import { MobileNav } from "./MobileNav";
 
 export function Header() {
   const t = useTranslations("nav");
+  const locale = useLocale() as Locale;
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
 
@@ -57,13 +59,10 @@ export function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <a
-              href={BUSINESS.phoneHref}
-              className="clip-corner hidden items-center gap-2 bg-accent-500 px-4 py-2 font-display text-sm uppercase tracking-wide text-navy-950 transition-colors hover:bg-white sm:flex"
-            >
-              <Phone className="size-4" aria-hidden />
-              {BUSINESS.phone}
-            </a>
+            <BookingContactMenu
+              locale={locale}
+              className="hidden px-4 py-2 sm:flex"
+            />
 
             <button
               type="button"

@@ -1,9 +1,9 @@
-import { Check, Phone } from "lucide-react";
+import { Check } from "lucide-react";
 import Image from "next/image";
 import type { Locale } from "@/i18n/routing";
 import type { Program } from "@/content/programs";
 import type { ProgramDetail } from "@/content/programDetails";
-import { BUSINESS } from "@/lib/constants";
+import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/ui/Container";
@@ -28,7 +28,6 @@ export function ProgramDetailTemplate({
   const t = {
     services: locale === "bs" ? "Usluge" : "Services",
     quiz: locale === "bs" ? "Pronađi svoj program" : "Find your program",
-    call: locale === "bs" ? "Pozovi" : "Call us",
   };
 
   return (
@@ -61,13 +60,7 @@ export function ProgramDetailTemplate({
               >
                 {t.quiz}
               </a>
-              <a
-                href={BUSINESS.phoneHref}
-                className="clip-corner inline-flex items-center gap-2 bg-transparent px-6 py-3 font-display text-sm uppercase tracking-wide text-navy-700 ring-1 ring-inset ring-navy-300 transition-colors hover:bg-navy-100"
-              >
-                <Phone className="size-4" aria-hidden />
-                {t.call}
-              </a>
+              <BookingContactMenu locale={locale} variant="ghost" />
             </div>
           </div>
 

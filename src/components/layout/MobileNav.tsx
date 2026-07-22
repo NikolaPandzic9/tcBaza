@@ -1,12 +1,13 @@
 "use client";
 
-import { Phone, X } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { X } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useEffect } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
-import { BUSINESS } from "@/lib/constants";
+import type { Locale } from "@/i18n/routing";
 import { isNavLinkActive, NAV_LINKS } from "@/lib/navLinks";
 import { cn } from "@/lib/cn";
+import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 
 interface MobileNavProps {
   open: boolean;
@@ -15,6 +16,7 @@ interface MobileNavProps {
 
 export function MobileNav({ open, onClose }: MobileNavProps) {
   const t = useTranslations("nav");
+  const locale = useLocale() as Locale;
   const pathname = usePathname();
 
   useEffect(() => {
@@ -61,13 +63,7 @@ export function MobileNav({ open, onClose }: MobileNavProps) {
           );
         })}
 
-        <a
-          href={BUSINESS.phoneHref}
-          className="mt-6 flex items-center justify-center gap-2 bg-accent-500 px-6 py-3 font-display text-sm uppercase tracking-wide text-navy-950 clip-corner"
-        >
-          <Phone className="size-4" aria-hidden />
-          {BUSINESS.phone}
-        </a>
+        <BookingContactMenu locale={locale} className="mt-6 w-full" />
       </nav>
     </div>
   );

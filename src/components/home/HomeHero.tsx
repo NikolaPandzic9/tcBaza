@@ -1,17 +1,17 @@
 "use client";
 
 import { motion, useScroll, useTransform, type Variants } from "motion/react";
-import { useLocale, useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 import Image from "next/image";
 import { useRef } from "react";
 import { AngledDivider } from "@/components/ui/AngledDivider";
 import { buttonBaseClasses, buttonVariantClasses } from "@/components/ui/buttonStyles";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { VertebraeDivider } from "@/components/ui/VertebraeDivider";
+import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { useMediaQuery } from "@/components/motion/useMediaQuery";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { HERO } from "@/content/home";
-import { BUSINESS } from "@/lib/constants";
 import { cn } from "@/lib/cn";
 import type { Locale } from "@/i18n/routing";
 
@@ -27,7 +27,6 @@ const item: Variants = {
 
 export function HomeHero() {
   const locale = useLocale() as Locale;
-  const t = useTranslations("cta");
   const reducedMotion = useReducedMotion();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const containerRef = useRef<HTMLDivElement>(null);
@@ -91,15 +90,11 @@ export function HomeHero() {
           >
             {HERO.primaryCta[locale]}
           </a>
-          <a
-            href={BUSINESS.phoneHref}
-            className={cn(
-              buttonBaseClasses,
-              "bg-transparent text-white ring-1 ring-inset ring-white/40 hover:bg-white/10",
-            )}
-          >
-            {t("call")} — {BUSINESS.phone}
-          </a>
+          <BookingContactMenu
+            locale={locale}
+            variant="ghost"
+            className="bg-transparent text-white ring-1 ring-inset ring-white/40 hover:bg-white/10"
+          />
         </motion.div>
       </motion.div>
 
