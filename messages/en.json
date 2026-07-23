@@ -7,10 +7,7 @@
     "pricing": "Membership & Pricing",
     "pricingShort": "Pricing",
     "team": "Our Team",
-    "groupSchedule": "Group Training",
-    "groupScheduleShort": "Sessions",
-    "commercialGymSchedule": "Commercial Gym",
-    "commercialGymScheduleShort": "Gym",
+    "schedule": "Schedule",
     "partners": "Partners",
     "contact": "Contact",
     "quiz": "Find your program",
@@ -34,7 +31,8 @@
     "legalTitle": "Legal",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
-    "rights": "All rights reserved."
+    "rights": "All rights reserved.",
+    "madeBy": "Website by"
   },
   "language": {
     "label": "Language",

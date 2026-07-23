@@ -7,10 +7,7 @@
     "pricing": "Članarine i cijene",
     "pricingShort": "Cijene",
     "team": "Naš tim",
-    "groupSchedule": "Grupni treninzi",
-    "groupScheduleShort": "Treninzi",
-    "commercialGymSchedule": "Komercijalna teretana",
-    "commercialGymScheduleShort": "Teretana",
+    "schedule": "Termini",
     "partners": "Partneri",
     "contact": "Kontakt",
     "quiz": "Pronađi svoj program",
@@ -34,7 +31,8 @@
     "legalTitle": "Pravno",
     "privacy": "Politika privatnosti",
     "terms": "Uslovi korištenja",
-    "rights": "Sva prava zadržana."
+    "rights": "Sva prava zadržana.",
+    "madeBy": "Sajt kreirao"
   },
   "language": {
     "label": "Jezik",

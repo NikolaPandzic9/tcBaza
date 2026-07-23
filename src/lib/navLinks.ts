@@ -7,10 +7,7 @@ export type NavMessageKey =
   | "pricing"
   | "pricingShort"
   | "team"
-  | "groupSchedule"
-  | "groupScheduleShort"
-  | "commercialGymSchedule"
-  | "commercialGymScheduleShort"
+  | "schedule"
   | "contact"
   | "partners";
 
@@ -28,16 +25,7 @@ export const NAV_LINKS: NavLink[] = [
   { href: "/usluge", messageKey: "services" },
   { href: "/clanarine-i-cijene", messageKey: "pricing", shortMessageKey: "pricingShort" },
   { href: "/nas-tim", messageKey: "team" },
-  {
-    href: "/rezervacija-termina",
-    messageKey: "groupSchedule",
-    shortMessageKey: "groupScheduleShort",
-  },
-  {
-    href: "/rezervacija-termina/komercijalna-teretana",
-    messageKey: "commercialGymSchedule",
-    shortMessageKey: "commercialGymScheduleShort",
-  },
+  { href: "/rezervacija-termina", messageKey: "schedule" },
   { href: "/partneri", messageKey: "partners" },
   { href: "/kontakt", messageKey: "contact" },
 ];

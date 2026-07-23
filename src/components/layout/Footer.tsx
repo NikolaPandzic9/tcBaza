@@ -1,5 +1,6 @@
 import { Clock, MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { BUSINESS } from "@/lib/constants";
 import { NAV_LINKS } from "@/lib/navLinks";
@@ -94,11 +95,28 @@ export function Footer() {
       </Container>
 
       <div className="border-t border-white/10 py-6">
-        <Container className="flex flex-col items-center justify-between gap-2 text-xs text-white/60 sm:flex-row">
+        <Container className="flex flex-col items-center justify-between gap-3 text-xs text-white/60 sm:flex-row">
           <p>
             © {year} {BUSINESS.name}. {t("footer.rights")}
           </p>
-          <p>{BUSINESS.legalSlogan}</p>
+          <div className="flex items-center gap-4">
+            <p>{BUSINESS.legalSlogan}</p>
+            <a
+              href="https://devet.ba"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 hover:text-white"
+            >
+              <span>{t("footer.madeBy")}</span>
+              <Image
+                src="/brand/logo-devet-white.svg"
+                alt="Studio Devet"
+                width={140}
+                height={77}
+                className="h-4 w-auto opacity-90"
+              />
+            </a>
+          </div>
         </Container>
       </div>
     </footer>

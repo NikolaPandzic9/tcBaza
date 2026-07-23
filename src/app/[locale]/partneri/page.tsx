@@ -1,4 +1,4 @@
-import { Handshake } from "lucide-react";
+import { ArrowUpRight, Handshake } from "lucide-react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
@@ -19,8 +19,8 @@ export async function generateMetadata({
     title: locale === "bs" ? "Partneri" : "Partners",
     description:
       locale === "bs"
-        ? "Partneri Trening centra Baza: KMF Tango i Kik boks klub Slavija."
-        : "Trening centar Baza's partners: KMF Tango and Kik boks klub Slavija.",
+        ? "Partneri Trening centra Baza: KMF Tango, Kik boks klub Slavija i Studio Devet."
+        : "Trening centar Baza's partners: KMF Tango, Kik boks klub Slavija, and Studio Devet.",
   };
 }
 
@@ -40,32 +40,67 @@ export default async function PartnersPage({
           title={locale === "bs" ? "Uz koga radimo" : "Who we work with"}
         />
 
-        <div className="mt-12 grid gap-5 sm:grid-cols-2">
-          {PARTNERS.map((partner, index) => (
-            <RevealOnScroll
-              key={partner.name}
-              delayMs={index * 60}
-              className="clip-corner-lg bg-white p-7 shadow-sm ring-1 ring-charcoal-200 transition-shadow hover:shadow-md"
-            >
-              {partner.logo ? (
-                <Image
-                  src={partner.logo}
-                  alt={partner.name}
-                  width={56}
-                  height={56}
-                  className="size-14 object-contain"
-                />
-              ) : (
-                <Handshake className="size-8 text-accent-ink-700" aria-hidden />
-              )}
-              <h2 className="mt-4 font-display text-lg uppercase tracking-wide text-navy-900">
-                {partner.name}
-              </h2>
-              <p className="mt-2 text-sm text-charcoal-500">
-                {partner.description[locale]}
-              </p>
-            </RevealOnScroll>
-          ))}
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {PARTNERS.map((partner, index) => {
+            const card = (
+              <>
+                <div className="flex h-28 items-center justify-center clip-corner bg-navy-50 ring-1 ring-charcoal-100">
+                  {partner.logo ? (
+                    <Image
+                      src={partner.logo}
+                      alt={partner.name}
+                      width={140}
+                      height={90}
+                      className="h-16 w-auto max-w-[75%] object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  ) : (
+                    <Handshake className="size-9 text-accent-ink-700" aria-hidden />
+                  )}
+                </div>
+
+                <p className="mt-5 font-display text-xs uppercase tracking-[0.2em] text-accent-ink-700">
+                  {partner.category[locale]}
+                </p>
+                <h2 className="mt-2 font-display text-lg uppercase tracking-wide text-navy-900">
+                  {partner.name}
+                </h2>
+                <p className="mt-2 text-sm text-charcoal-500">
+                  {partner.description[locale]}
+                </p>
+
+                {partner.url && (
+                  <span className="mt-4 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-navy-700 underline decoration-accent-500 decoration-2 underline-offset-4 group-hover:text-navy-900">
+                    {locale === "bs" ? "Posjeti sajt" : "Visit website"}
+                    <ArrowUpRight
+                      className="size-3.5 shrink-0 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                      aria-hidden
+                    />
+                  </span>
+                )}
+              </>
+            );
+
+            return (
+              <RevealOnScroll
+                key={partner.name}
+                delayMs={index * 60}
+                className="group clip-corner-lg bg-white p-7 shadow-sm ring-1 ring-charcoal-200 transition-shadow hover:shadow-lg"
+              >
+                {partner.url ? (
+                  <a
+                    href={partner.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-accent-500"
+                  >
+                    {card}
+                  </a>
+                ) : (
+                  card
+                )}
+              </RevealOnScroll>
+            );
+          })}
         </div>
       </Container>
     </main>
