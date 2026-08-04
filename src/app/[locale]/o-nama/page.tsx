@@ -16,7 +16,6 @@ import { AboutParallaxImage } from "@/components/about/AboutParallaxImage";
 import { AboutStats } from "@/components/about/AboutStats";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
-import { LinkButton } from "@/components/ui/LinkButton";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 
 export async function generateMetadata({
@@ -168,38 +167,6 @@ export default async function AboutPage({
                 <p className="mt-2 text-sm text-white/70">{step.body[locale]}</p>
               </RevealOnScroll>
             ))}
-          </div>
-
-          <div className="mt-16 border-t border-white/10 pt-12">
-            <div className="flex flex-wrap items-end justify-between gap-6">
-              <p className="font-display text-sm uppercase tracking-wide text-white/60">
-                {isBs ? "Ljudi iza svakog treninga" : "The people behind every session"}
-              </p>
-              <LinkButton href="/nas-tim" variant="secondary">
-                {isBs ? "Upoznaj naš tim" : "Meet our team"}
-              </LinkButton>
-            </div>
-            <div className="mt-6 flex flex-wrap gap-3">
-              {TEAM.map((member) => (
-                <div
-                  key={member.name}
-                  className="flex items-center gap-2.5 clip-corner bg-white/5 py-1.5 pl-1.5 pr-3 ring-1 ring-white/10"
-                >
-                  <span className="relative size-9 shrink-0 overflow-hidden clip-corner bg-navy-700">
-                    {member.photo ? (
-                      <Image
-                        src={member.photo}
-                        alt=""
-                        fill
-                        sizes="36px"
-                        className="object-cover"
-                      />
-                    ) : null}
-                  </span>
-                  <span className="text-xs font-medium text-white/80">{member.name}</span>
-                </div>
-              ))}
-            </div>
           </div>
         </Container>
       </section>

@@ -1,13 +1,24 @@
-import { Clock, MapPin, Phone } from "lucide-react";
+import { MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
+import type { Pathnames } from "@/i18n/routing";
 import { BUSINESS } from "@/lib/constants";
-import { NAV_LINKS } from "@/lib/navLinks";
+import type { NavMessageKey } from "@/lib/navLinks";
 import { Container } from "@/components/ui/Container";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 import { VertebraeDivider } from "@/components/ui/VertebraeDivider";
 import { Logo } from "./Logo";
+
+// A short, curated set — not the full header nav. The footer's job is a
+// quick way back to the pages people actually look for from here.
+const FOOTER_LINKS: { href: Pathnames; messageKey: NavMessageKey }[] = [
+  { href: "/usluge", messageKey: "services" },
+  { href: "/clanarine-i-cijene", messageKey: "pricing" },
+  { href: "/rezervacija-termina", messageKey: "schedule" },
+  { href: "/partneri", messageKey: "partners" },
+  { href: "/kontakt", messageKey: "contact" },
+];
 
 export function Footer() {
   const t = useTranslations();
@@ -15,108 +26,89 @@ export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto bg-navy-950 text-white/70">
+    <footer className="mt-auto bg-navy-950 text-white/80">
       <VertebraeDivider className="h-3 w-full text-navy-500/40" />
 
-      <Container className="grid gap-10 py-12 sm:grid-cols-2 lg:grid-cols-4">
-        <div>
-          <Logo variant="white" />
-          <p className="mt-4 font-display text-sm uppercase tracking-wide text-accent-500">
-            {t("footer.tagline")}
-          </p>
+      <Container className="flex flex-col items-center gap-8 py-16 text-center">
+        <Logo variant="white" />
+        <p className="-mt-4 font-display text-sm uppercase tracking-wide text-accent-500">
+          {t("footer.tagline")}
+        </p>
+
+        <nav
+          aria-label={t("footer.navTitle")}
+          className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm"
+        >
+          {FOOTER_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-white/75 transition-colors hover:text-white"
+            >
+              {tNav(link.messageKey)}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-white/75">
+          <a href={BUSINESS.phoneHref} className="flex items-center gap-2 transition-colors hover:text-white">
+            <Phone className="size-4 shrink-0 text-accent-500" aria-hidden />
+            {BUSINESS.phone}
+          </a>
+          <span className="flex items-center gap-2">
+            <MapPin className="size-4 shrink-0 text-accent-500" aria-hidden />
+            {BUSINESS.address.city}, {BUSINESS.address.country}
+          </span>
           <a
             href={BUSINESS.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-4 inline-flex items-center gap-2 text-sm hover:text-white"
+            className="flex items-center gap-2 transition-colors hover:text-white"
           >
-            <InstagramIcon className="size-4" aria-hidden />
+            <InstagramIcon className="size-4 shrink-0 text-accent-500" aria-hidden />
             {BUSINESS.instagramHandle}
           </a>
         </div>
-
-        <div>
-          <h2 className="font-display text-xs uppercase tracking-[0.2em] text-white/60">
-            {t("footer.navTitle")}
-          </h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                <Link href={link.href} className="hover:text-white">
-                  {tNav(link.messageKey)}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <h2 className="font-display text-xs uppercase tracking-[0.2em] text-white/60">
-            {t("footer.legalTitle")}
-          </h2>
-          <ul className="mt-4 space-y-2 text-sm">
-            <li>
-              <Link href="/politika-privatnosti" className="hover:text-white">
-                {t("footer.privacy")}
-              </Link>
-            </li>
-            <li>
-              <Link href="/uslovi-koristenja" className="hover:text-white">
-                {t("footer.terms")}
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div className="text-sm">
-          <h2 className="font-display text-xs uppercase tracking-[0.2em] text-white/60">
-            {t("footer.addressLabel")}
-          </h2>
-          <p className="mt-4 flex gap-2">
-            <MapPin className="size-4 shrink-0 translate-y-0.5" aria-hidden />
-            <span>
-              {BUSINESS.address.street}
-              <br />
-              {BUSINESS.address.city}, {BUSINESS.address.country}
-            </span>
-          </p>
-          <a
-            href={BUSINESS.phoneHref}
-            className="mt-3 flex items-center gap-2 hover:text-white"
-          >
-            <Phone className="size-4" aria-hidden />
-            {BUSINESS.phone}
-          </a>
-          <p className="mt-3 flex items-center gap-2">
-            <Clock className="size-4 shrink-0" aria-hidden />
-            {BUSINESS.hours.opens}–{BUSINESS.hours.closes} ({t("footer.hoursEveryDay")})
-          </p>
-        </div>
       </Container>
 
-      <div className="border-t border-white/10 py-6">
-        <Container className="flex flex-col items-center justify-between gap-3 text-xs text-white/60 sm:flex-row">
-          <p>
-            © {year} {BUSINESS.name}. {t("footer.rights")}
-          </p>
-          <div className="flex items-center gap-4">
-            <p>{BUSINESS.legalSlogan}</p>
-            <a
-              href="https://devet.ba"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 hover:text-white"
-            >
-              <span>{t("footer.madeBy")}</span>
-              <Image
-                src="/brand/logo-devet-white.svg"
-                alt="Studio Devet"
-                width={140}
-                height={77}
-                className="h-4 w-auto opacity-90"
-              />
-            </a>
+      <div className="border-t border-white/10 py-8">
+        <Container className="flex flex-col items-center gap-4 text-center text-xs text-white/60">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <p>
+              © {year} {BUSINESS.name}. {t("footer.rights")}
+            </p>
+            <span aria-hidden className="text-white/30">
+              ·
+            </span>
+            <Link href="/politika-privatnosti" className="transition-colors hover:text-white">
+              {t("footer.privacy")}
+            </Link>
+            <span aria-hidden className="text-white/30">
+              ·
+            </span>
+            <Link href="/uslovi-koristenja" className="transition-colors hover:text-white">
+              {t("footer.terms")}
+            </Link>
           </div>
+
+          <a
+            href="https://devet.ba"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group flex items-center gap-3"
+          >
+            <span className="text-xs uppercase tracking-wide text-white/50 transition-colors group-hover:text-white/75">
+              {t("footer.madeBy")}
+            </span>
+            <span aria-hidden className="h-4 w-px bg-white/15" />
+            <Image
+              src="/brand/logo-devet-white.svg"
+              alt="Studio Devet"
+              width={140}
+              height={77}
+              className="h-6 w-auto opacity-90 transition-opacity group-hover:opacity-100"
+            />
+          </a>
         </Container>
       </div>
     </footer>

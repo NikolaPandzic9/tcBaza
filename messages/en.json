@@ -23,16 +23,11 @@
   },
   "footer": {
     "tagline": "For yourself.",
-    "addressLabel": "Address",
-    "hoursEveryDay": "every day",
-    "phoneLabel": "Phone",
-    "instagramLabel": "Instagram",
-    "navTitle": "Site",
-    "legalTitle": "Legal",
+    "navTitle": "Footer navigation",
     "privacy": "Privacy Policy",
     "terms": "Terms of Use",
     "rights": "All rights reserved.",
-    "madeBy": "Website by"
+    "madeBy": "Created by"
   },
   "language": {
     "label": "Language",

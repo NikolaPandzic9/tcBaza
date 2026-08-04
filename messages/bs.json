@@ -23,16 +23,11 @@
   },
   "footer": {
     "tagline": "Zbog sebe.",
-    "addressLabel": "Adresa",
-    "hoursEveryDay": "svaki dan",
-    "phoneLabel": "Telefon",
-    "instagramLabel": "Instagram",
-    "navTitle": "Sajt",
-    "legalTitle": "Pravno",
+    "navTitle": "Navigacija u podnožju",
     "privacy": "Politika privatnosti",
     "terms": "Uslovi korištenja",
     "rights": "Sva prava zadržana.",
-    "madeBy": "Sajt kreirao"
+    "madeBy": "Kreirao"
   },
   "language": {
     "label": "Jezik",
