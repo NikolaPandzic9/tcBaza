@@ -1,6 +1,5 @@
 import { and, asc, count, desc, eq, ilike, or, sql, type SQL } from "drizzle-orm";
 import { escapeLike } from "../db/sql";
-import sharp from "sharp";
 import { randomUUID } from "node:crypto";
 import { writeAudit, type Actor } from "../audit";
 import { invalidate } from "../cache";
@@ -71,6 +70,9 @@ export async function processUpload(filename: string, body: Buffer) {
     };
   }
 
+  // Loaded on demand: a native-module problem then only affects uploads,
+  // never the ERP pages that merely import this module.
+  const { default: sharp } = await import("sharp");
   let meta: Awaited<ReturnType<ReturnType<typeof sharp>["metadata"]>>;
   try {
     meta = await sharp(body).metadata();
