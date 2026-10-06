@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { getProgram, getStartingPriceLabel } from "@/content/programs";
-import { PROGRAM_DETAILS } from "@/content/programDetails";
+import { buildPageMetadata } from "@/lib/seo";
+import { getStartingPriceLabel } from "@/content/programs";
 import { ProgramDetailTemplate } from "@/components/programs/ProgramDetailTemplate";
+import { getProgramPage } from "@/server/site/content";
 
 const SLUG = "rekreativci" as const;
 
@@ -13,16 +15,19 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const program = getProgram(SLUG);
-  const priceLabel = getStartingPriceLabel(program, locale);
+  const isBs = locale === "bs";
+  const page = await getProgramPage(SLUG);
+  if (!page) return {};
+  const priceLabel = getStartingPriceLabel(page.program, locale);
 
-  return {
-    title:
-      locale === "bs"
-        ? `Rekreativci — grupni treninzi ${priceLabel}`
-        : `Recreational — group training ${priceLabel}`,
-    description: program.shortPitch[locale],
-  };
+  return buildPageMetadata({
+    locale,
+    path: page.program.href,
+    title: isBs ? "Grupni treninzi za rekreativce" : "Recreational small-group training",
+    description: isBs
+      ? `Personalizovani grupni treninzi do 5 članova: individualni plan nakon testiranja i trener na svakom treningu. Cijena ${priceLabel}, Istočno Sarajevo.`
+      : `Personalized small-group training (max 5): an individual plan after assessment and a trainer at every session. Priced ${priceLabel}, Istočno Sarajevo.`,
+  });
 }
 
 export default async function RekreativciPage({
@@ -33,11 +38,16 @@ export default async function RekreativciPage({
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
 
+  // Hidden in the ERP → the page is gone until it's shown again.
+  const page = await getProgramPage(SLUG);
+  if (!page) notFound();
+
   return (
     <ProgramDetailTemplate
-      program={getProgram(SLUG)}
-      detail={PROGRAM_DETAILS[SLUG]}
+      program={page.program}
+      detail={page.detail}
       locale={locale}
+      info={page.content.info}
     />
   );
 }

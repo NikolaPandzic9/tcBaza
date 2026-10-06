@@ -47,3 +47,6 @@ next-env.d.ts
 HANDOVER.md
 master-prompt-web-sajt.md
 /assets/
+
+# local database (scripts/dev-db.ts) and uploaded media in dev
+/.data/

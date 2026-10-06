@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
+import { buildPageMetadata } from "@/lib/seo";
 import { TERMS_OF_USE } from "@/content/legal";
 import { Container } from "@/components/ui/Container";
 import { LegalContent } from "@/components/legal/LegalContent";
@@ -11,11 +12,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title: locale === "bs" ? "Uslovi korištenja" : "Terms of Use",
-    robots: { index: true, follow: true },
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/uslovi-koristenja",
+    title: isBs ? "Uslovi korištenja" : "Terms of Use",
+    description: isBs
+      ? "Uslovi korištenja sajta Trening centra Baza."
+      : "Terms of use for the Trening centar Baza website.",
+  });
 }
 
 export default async function TermsOfUsePage({

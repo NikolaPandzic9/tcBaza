@@ -5,6 +5,9 @@ import { cn } from "@/lib/cn";
 
 interface LogoProps {
   variant?: "white" | "navy";
+  /** Only the header logo is above the fold — preloading the footer copy
+   * too would compete with the hero image for bandwidth. */
+  priority?: boolean;
   className?: string;
 }
 
@@ -13,7 +16,7 @@ const SOURCES = {
   navy: "/brand/logo-mark-navy-transparent.png",
 } as const;
 
-export function Logo({ variant = "white", className }: LogoProps) {
+export function Logo({ variant = "white", priority = false, className }: LogoProps) {
   return (
     <Link
       href="/"
@@ -28,7 +31,7 @@ export function Logo({ variant = "white", className }: LogoProps) {
         alt={BUSINESS.name}
         width={738}
         height={418}
-        priority
+        priority={priority}
         className="h-9 w-auto sm:h-11"
       />
     </Link>

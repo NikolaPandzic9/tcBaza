@@ -5,8 +5,8 @@ import { Phone, RotateCcw } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
-import { getProgram } from "@/content/programs";
-import { BUSINESS } from "@/lib/constants";
+import { findProgram, type Program } from "@/content/programs";
+import { useSiteInfo } from "@/components/site/SiteInfoProvider";
 import { buttonBaseClasses } from "@/components/ui/buttonStyles";
 import { useReducedMotion } from "@/components/motion/useReducedMotion";
 import { cn } from "@/lib/cn";
@@ -14,14 +14,40 @@ import type { QuizResultSpec } from "./quizLogic";
 
 interface QuizResultCardProps {
   result: QuizResultSpec;
+  programs: Program[];
   locale: Locale;
   onReset: () => void;
 }
 
-export function QuizResultCard({ result, locale, onReset }: QuizResultCardProps) {
+export function QuizResultCard({ result, programs, locale, onReset }: QuizResultCardProps) {
   const t = useTranslations("cta");
   const reducedMotion = useReducedMotion();
-  const program = getProgram(result.programSlug);
+  const info = useSiteInfo();
+  const program = findProgram(programs, result.programSlug);
+  // A program hidden in the ERP has no page to link to — the call button
+  // still works, so the result degrades to "get in touch".
+  if (!program) {
+    return (
+      <div className="motion-reveal">
+        <p className="max-w-md text-white/80">{result.reassurance[locale]}</p>
+        <a
+          href={info.phoneHref}
+          className="clip-corner mt-6 inline-flex items-center gap-2 bg-accent-500 px-6 py-3 font-display text-sm uppercase tracking-wide text-navy-950 transition-colors hover:bg-white"
+        >
+          <Phone className="size-4" aria-hidden />
+          {t("call")}
+        </a>
+        <button
+          type="button"
+          onClick={onReset}
+          className="ml-4 inline-flex items-center gap-1.5 text-sm text-white/60 hover:text-white"
+        >
+          <RotateCcw className="size-3.5" aria-hidden />
+          {locale === "bs" ? "Ponovo" : "Start over"}
+        </button>
+      </div>
+    );
+  }
   const tier = result.tierId
     ? program.tiers.find((t) => t.id === result.tierId)
     : undefined;
@@ -58,7 +84,7 @@ export function QuizResultCard({ result, locale, onReset }: QuizResultCardProps)
 
       <div className="mt-8 flex flex-wrap items-center gap-4">
         <a
-          href={BUSINESS.phoneHref}
+          href={info.phoneHref}
           className="clip-corner inline-flex items-center gap-2 bg-accent-500 px-6 py-3 font-display text-sm uppercase tracking-wide text-navy-950 transition-colors hover:bg-white"
         >
           <Phone className="size-4" aria-hidden />

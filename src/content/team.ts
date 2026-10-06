@@ -8,7 +8,7 @@ export interface TeamMember {
 
 // Bios, certificates, and specialties aren't provided by the client yet —
 // deliberately not invented. Cards work with just name, role, and photo.
-export const TEAM: TeamMember[] = [
+export const DEFAULT_TEAM: TeamMember[] = [
   {
     name: "Andrej Ančić",
     role: { bs: "Trener", en: "Trainer" },
@@ -37,7 +37,7 @@ export const TEAM: TeamMember[] = [
   {
     name: "Dejan Đerić",
     role: { bs: "Maser", en: "Massage therapist" },
-    photo: null,
+    photo: "/photos/team/dejan-deric.jpg",
   },
 ];
 

@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { RECOVERY_INTRO, RECOVERY_SERVICES } from "@/content/recovery";
+import { buildPageMetadata } from "@/lib/seo";
+import { RECOVERY_INTRO } from "@/content/recovery";
+import { getSiteContent } from "@/server/site/content";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { VertebraeDivider } from "@/components/ui/VertebraeDivider";
 import { RecoveryServiceCard } from "@/components/recovery/RecoveryServiceCard";
-import { BUSINESS, SITE_URL } from "@/lib/constants";
+import { buildServiceSchema } from "@/lib/serviceSchema";
 
 // Stock photo (no real client photo exists for recovery services) — see
 // HANDOVER.md for the source/photographer to swap this out later.
@@ -27,14 +29,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title:
-      locale === "bs"
-        ? "Oporavak — masaža, hladna kupka, kompresivne čizme"
-        : "Recovery — massage, cold plunge, compression boots",
-    description: RECOVERY_INTRO.body[locale],
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/usluge/oporavak",
+    title: isBs ? "Masaža i oporavak — hladna kupka, čizme" : "Massage & recovery — cold plunge, boots",
+    description: isBs
+      ? "Masaža, hladna kupka i kompresivne čizme za brži oporavak mišića — od 15 KM, uz povoljnije cijene za članove. Trening centar Baza, Istočno Sarajevo."
+      : "Massage, cold plunge, and compression boots for faster muscle recovery — from 15 KM, with lower prices for members. Trening centar Baza, Istočno Sarajevo.",
+  });
 }
 
 export default async function OporavakPage({
@@ -44,33 +48,30 @@ export default async function OporavakPage({
 }) {
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
+  const content = await getSiteContent();
 
   const t = { services: locale === "bs" ? "Usluge" : "Services" };
 
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "Service",
-    serviceType: RECOVERY_INTRO.headline[locale],
-    name: locale === "bs" ? "Oporavak" : "Recovery",
+  const schema = buildServiceSchema({
+    name: locale === "bs" ? "Masaža i oporavak" : "Massage and recovery",
     description: RECOVERY_INTRO.body[locale],
-    provider: { "@type": "HealthClub", name: BUSINESS.name },
-    areaServed: BUSINESS.address.city,
-    offers: RECOVERY_SERVICES.flatMap((service) =>
+    path: "/usluge/oporavak",
+    locale,
+    offers: content.recovery.flatMap((service) =>
       service.prices.map((price) => ({
-        "@type": "Offer",
         name: `${service.name[locale]} — ${price.label[locale]}`,
         price: price.amount,
-        priceCurrency: "BAM",
-        url: `${SITE_URL}/usluge/oporavak`,
+        monthly: false,
       })),
     ),
-  };
+  });
 
   return (
     <main className="bg-navy-50">
       <JsonLd data={schema} />
       <Container>
         <Breadcrumbs
+          locale={locale}
           items={[
             { label: t.services, href: "/usluge" },
             { label: locale === "bs" ? "Oporavak" : "Recovery", href: "/usluge/oporavak" },
@@ -109,7 +110,7 @@ export default async function OporavakPage({
       <section className="bg-white py-16 sm:py-24">
         <Container>
           <div className="grid gap-6 sm:grid-cols-2">
-            {RECOVERY_SERVICES.map((service) => (
+            {content.recovery.map((service) => (
               <RecoveryServiceCard key={service.slug} service={service} locale={locale} />
             ))}
           </div>

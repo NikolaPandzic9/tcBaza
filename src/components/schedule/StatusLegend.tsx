@@ -1,5 +1,5 @@
 import type { Locale } from "@/i18n/routing";
-import type { TerminStatus } from "@/sanity/types";
+import type { TerminStatus } from "@/lib/schedule";
 import { StatusBadge } from "./StatusBadge";
 
 const STATUSES: TerminStatus[] = ["Slobodno", "Uskoro", "Popunjeno", "Otkazano"];

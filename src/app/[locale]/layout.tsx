@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Anton, Plus_Jakarta_Sans } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
@@ -12,8 +12,10 @@ import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { MetaPixel } from "@/components/analytics/MetaPixel";
 import { resolveLocale } from "@/i18n/resolveLocale";
 import { routing } from "@/i18n/routing";
-import { getHealthClubSchema } from "@/lib/businessSchema";
+import { getSiteSchema } from "@/lib/businessSchema";
 import { BUSINESS, SITE_URL } from "@/lib/constants";
+import { SiteInfoProvider } from "@/components/site/SiteInfoProvider";
+import { getSiteContent } from "@/server/site/content";
 import "../globals.css";
 
 const anton = Anton({
@@ -45,19 +47,21 @@ export async function generateMetadata({
     metadataBase: new URL(SITE_URL),
     title: {
       default: `${BUSINESS.name} — ${BUSINESS.legalSlogan}`,
-      template: `%s — ${BUSINESS.name}`,
+      template: `%s | ${BUSINESS.name}`,
     },
     description: isBs
-      ? "Personalizovani grupni treninzi u malim grupama do 5 članova, priprema sportista i programi oporavka u Istočnom Sarajevu."
-      : "Personalized small-group training (max 5 members per group), athlete preparation, and recovery programs in Istočno Sarajevo, Bosnia and Herzegovina.",
-    alternates: {
-      languages: {
-        bs: "/",
-        en: "/en",
-      },
-    },
+      ? "Personalizovani grupni treninzi u malim grupama do 5 članova, priprema sportista, Sportski pasoš za djecu i oporavak u Istočnom Sarajevu."
+      : "Personalized small-group training (max 5 members per group), athlete preparation, a sports program for kids, and recovery in Istočno Sarajevo, Bosnia and Herzegovina.",
+    applicationName: BUSINESS.name,
+    // Canonical + hreflang are set per page (lib/seo.ts) — a layout-level
+    // value would be inherited by every route and point them all at "/".
+    formatDetection: { telephone: false, address: false, email: false },
   };
 }
+
+export const viewport: Viewport = {
+  themeColor: "#1A3665",
+};
 
 export default async function LocaleLayout({
   children,
@@ -70,6 +74,7 @@ export default async function LocaleLayout({
 
   // Enables static rendering for this locale segment.
   setRequestLocale(locale);
+  const content = await getSiteContent();
 
   return (
     <html
@@ -78,14 +83,16 @@ export default async function LocaleLayout({
     >
       <body className="flex min-h-full flex-col bg-navy-50 pb-14 font-body text-charcoal-700 antialiased sm:pb-0">
         <NextIntlClientProvider>
-          <JsonLd data={getHealthClubSchema()} />
-          <Header />
-          {children}
-          <Footer />
-          <StickyCallCta />
-          <CookieConsentBanner />
-          <GoogleAnalytics />
-          <MetaPixel />
+          <SiteInfoProvider value={content.info}>
+            <JsonLd data={getSiteSchema(locale, content)} />
+            <Header />
+            {children}
+            <Footer info={content.info} />
+            <StickyCallCta />
+            <CookieConsentBanner />
+            <GoogleAnalytics />
+            <MetaPixel />
+          </SiteInfoProvider>
         </NextIntlClientProvider>
       </body>
     </html>

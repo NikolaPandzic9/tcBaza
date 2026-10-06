@@ -1,7 +1,7 @@
 import { Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { BUSINESS } from "@/lib/constants";
+import { getSiteContent } from "@/server/site/content";
 import { VertebraeDivider } from "@/components/ui/VertebraeDivider";
 import { buttonBaseClasses, buttonVariantClasses } from "@/components/ui/buttonStyles";
 import { cn } from "@/lib/cn";
@@ -9,6 +9,7 @@ import { cn } from "@/lib/cn";
 export default async function NotFound() {
   const t = await getTranslations("notFound");
   const tCta = await getTranslations("cta");
+  const { info } = await getSiteContent();
 
   return (
     <main className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-navy-950 px-6 py-24 text-center text-white">
@@ -27,7 +28,7 @@ export default async function NotFound() {
           {t("cta")}
         </Link>
         <a
-          href={BUSINESS.phoneHref}
+          href={info.phoneHref}
           className="clip-corner inline-flex items-center gap-2 bg-transparent px-6 py-3 font-display text-sm uppercase tracking-wide text-white ring-1 ring-inset ring-white/40 transition-colors hover:bg-white/10"
         >
           <Phone className="size-4" aria-hidden />

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { getSiteSettings, getTermini } from "@/sanity/queries";
+import { buildPageMetadata } from "@/lib/seo";
 import { getCommercialGymBlockedWindows } from "@/lib/commercialGymSchedule";
-import { BUSINESS } from "@/lib/constants";
+import { getSchedule, getSiteContent } from "@/server/site/content";
 import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -16,17 +16,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title:
-      locale === "bs"
-        ? "Komercijalna teretana — kada je dostupna"
-        : "Commercial gym — when it's available",
-    description:
-      locale === "bs"
-        ? "Samostalan pristup teretani van termina kad je grupni trening popunjen — provjeri kad je teretana slobodna."
-        : "Independent gym access outside of fully-booked group sessions — check when the floor is free.",
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/rezervacija-termina/komercijalna-teretana",
+    title: isBs ? "Teretana — slobodni termini" : "Open gym — available hours",
+    description: isBs
+      ? "Provjeri kada je teretana slobodna za samostalan trening — dostupna tokom cijelog radnog vremena, osim kad je grupni trening popunjen."
+      : "Check when the gym floor is free for independent training — open all business hours, except when a group session is fully booked.",
+  });
 }
 
 export default async function CommercialGymSchedulePage({
@@ -37,17 +36,17 @@ export default async function CommercialGymSchedulePage({
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
 
-  const settings = await getSiteSettings();
-  const termini = settings.terminiSectionEnabled ? await getTermini() : [];
-  const blockedDays = getCommercialGymBlockedWindows(termini);
+  const [schedule, { info }] = await Promise.all([getSchedule(), getSiteContent()]);
+  const blockedDays = getCommercialGymBlockedWindows(schedule.termini, schedule.commercialGymThreshold);
+  const threshold = schedule.commercialGymThreshold;
 
   const t = {
     eyebrow: locale === "bs" ? "Termini" : "Schedule",
     headline: locale === "bs" ? "Komercijalna teretana" : "Commercial gym",
     body:
       locale === "bs"
-        ? `Samostalan trening dostupan je tokom radnog vremena (${BUSINESS.hours.opens}–${BUSINESS.hours.closes}), osim u terminima kad je grupni trening popunjen sa 3 ili više članova — tada teretana ustupa prostor grupi.`
-        : `Independent training is available during business hours (${BUSINESS.hours.opens}–${BUSINESS.hours.closes}), except during group-training sessions with 3 or more members — the floor is reserved for the group at those times.`,
+        ? `Samostalan trening dostupan je tokom radnog vremena (${info.hours.opens}–${info.hours.closes}), osim u terminima kad je grupni trening popunjen sa ${threshold} ili više članova — tada teretana ustupa prostor grupi.`
+        : `Independent training is available during business hours (${info.hours.opens}–${info.hours.closes}), except during group-training sessions with ${threshold} or more members — the floor is reserved for the group at those times.`,
     disabled:
       locale === "bs"
         ? "Raspored trenutno nije dostupan na sajtu. Za teretanu nas pozovi direktno."
@@ -63,7 +62,7 @@ export default async function CommercialGymSchedulePage({
           <ScheduleSectionTabs active="komercijalna" locale={locale} />
         </div>
 
-        {!settings.terminiSectionEnabled ? (
+        {!schedule.enabled ? (
           <div className="mt-12 clip-corner-lg bg-white p-8 text-center shadow-sm ring-1 ring-charcoal-200 sm:p-12">
             <p className="text-charcoal-500">{t.disabled}</p>
             <div className="mt-5 flex justify-center">

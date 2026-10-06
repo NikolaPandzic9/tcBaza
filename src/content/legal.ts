@@ -17,16 +17,16 @@ export const PRIVACY_POLICY: LegalSection[] = [
     heading: { bs: "Koje podatke prikupljamo", en: "What data we collect" },
     body: [
       {
-        bs: "Kontakt forma: kada nam pošalješ poruku preko stranice Kontakt, prikupljamo ime, email adresu, telefon (ako ga uneseš) i sadržaj poruke. Ovi podaci se koriste isključivo da ti odgovorimo na upit i ne dijele se sa trećim stranama osim servisa koji tehnički omogućava slanje emaila (vidi ispod).",
-        en: "Contact form: when you send us a message through the Contact page, we collect your name, email address, phone number (if provided), and the message content. This data is used solely to respond to your inquiry and isn't shared with third parties beyond the service that technically delivers the email (see below).",
+        bs: "Kontakt forma: kada nam pošalješ poruku preko stranice Kontakt, prikupljamo ime, email adresu, telefon (ako ga uneseš) i sadržaj poruke. Poruka se čuva u našem internom sistemu, kojem pristupaju samo ovlašteni zaposleni, i koristi se isključivo da ti odgovorimo na upit. Ne dijeli se sa trećim stranama osim servisa koji tehnički omogućavaju rad sajta i slanje emaila (vidi ispod).",
+        en: "Contact form: when you send us a message through the Contact page, we collect your name, email address, phone number (if provided), and the message content. The message is stored in our internal system, accessible only to authorized staff, and used solely to respond to your inquiry. It isn't shared with third parties beyond the services that technically run the site and deliver email (see below).",
       },
       {
         bs: "Analitika posjeta: ako prihvatiš kolačiće za analitiku, koristimo Google Analytics 4 da razumijemo koje stranice se posjećuju i kako posjetioci koriste sajt (broj posjeta, uređaj, približna lokacija na nivou grada). Ovi podaci su agregirani i ne koriste se za identifikaciju pojedinca.",
         en: "Visit analytics: if you accept analytics cookies, we use Google Analytics 4 to understand which pages are visited and how visitors use the site (visit counts, device type, approximate city-level location). This data is aggregated and isn't used to identify individuals.",
       },
       {
-        bs: "Ne prikupljamo lozinke niti kreiramo korisničke naloge — sajt trenutno nema sistem za prijavu.",
-        en: "We don't collect passwords or create user accounts — the site currently has no login system.",
+        bs: "Posjetiocima sajta ne kreiramo korisničke naloge i ne prikupljamo lozinke.",
+        en: "We don't create user accounts for site visitors or collect their passwords.",
       },
     ],
   },
@@ -55,8 +55,8 @@ export const PRIVACY_POLICY: LegalSection[] = [
         en: "Google Analytics 4 and Google Maps (for the location embed) — Google may process data about your visit under its own privacy policy.",
       },
       {
-        bs: "Sanity — sistem za upravljanje sadržajem koji koristimo za raspored termina. Ne prikuplja podatke o posjetiocima sajta, samo sadrži tekstualni sadržaj koji mi unosimo.",
-        en: "Sanity — the content management system we use for the training schedule. It doesn't collect visitor data; it only holds text content that we enter.",
+        bs: "Vercel (hosting) i Neon (baza podataka) — infrastruktura na kojoj rade sajt i naš interni sistem. Podatke čuvaju i obrađuju isključivo u naše ime.",
+        en: "Vercel (hosting) and Neon (database) — the infrastructure that runs the site and our internal system. They store and process data solely on our behalf.",
       },
     ],
   },
@@ -66,6 +66,10 @@ export const PRIVACY_POLICY: LegalSection[] = [
       {
         bs: "Poruke poslane putem kontakt forme čuvamo onoliko dugo koliko je potrebno da odgovorimo na upit i eventualno pratimo dogovor oko članstva ili termina, a zatim ih brišemo ili arhiviramo u skladu sa dobrom poslovnom praksom.",
         en: "Messages sent via the contact form are kept as long as needed to respond to the inquiry and follow up on any membership or scheduling arrangement, then deleted or archived per good business practice.",
+      },
+      {
+        bs: "Na tvoj zahtjev poruku i sve povezane podatke trajno brišemo iz internog sistema.",
+        en: "At your request, we permanently delete the message and any related data from our internal system.",
       },
     ],
   },

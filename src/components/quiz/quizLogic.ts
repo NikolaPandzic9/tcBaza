@@ -1,6 +1,6 @@
 import type { Localized, ProgramSlug } from "@/content/programs";
 
-export type Goal = "rekreacija" | "sport" | "teretana" | "kik-boks";
+export type Goal = "rekreacija" | "sport" | "teretana" | "dijete";
 export type AgeBracket = "under14" | "14-18" | "19plus";
 export type Experience = "beginner" | "occasional" | "regular";
 
@@ -21,7 +21,7 @@ export type QuizStep = "goal" | "age" | "experience" | "result";
 /** Which step comes next, given the current answers — drives the whole flow. */
 export function getNextStep(answers: QuizAnswers): QuizStep {
   if (!answers.goal) return "goal";
-  if (answers.goal === "teretana" || answers.goal === "kik-boks") return "result";
+  if (answers.goal === "teretana" || answers.goal === "dijete") return "result";
   if (!answers.age) return "age";
   if (!answers.experience) return "experience";
   return "result";
@@ -29,7 +29,7 @@ export function getNextStep(answers: QuizAnswers): QuizStep {
 
 /** Full step list for the current branch — used to render accurate progress. */
 export function getStepList(goal: Goal | null): QuizStep[] {
-  if (goal === "teretana" || goal === "kik-boks") return ["goal", "result"];
+  if (goal === "teretana" || goal === "dijete") return ["goal", "result"];
   return ["goal", "age", "experience", "result"];
 }
 
@@ -75,13 +75,13 @@ export function getQuizResult(answers: QuizAnswers): QuizResultSpec | null {
     };
   }
 
-  if (goal === "kik-boks") {
+  if (goal === "dijete") {
     return {
-      programSlug: "kik-boks",
-      tierId: "kik-boks",
+      programSlug: "sportski-pasos",
+      tierId: "sportski-pasos",
       reassurance: {
-        bs: "Treninzi se vode u saradnji sa Kik boks klubom Slavija — za trenera i cijenu nas kontaktiraj direktno.",
-        en: "Sessions are run with Kik boks klub Slavija — contact us directly for the trainer and price.",
+        bs: "Kroz igru i raznovrsne sportske aktivnosti dijete razvija motoriku, snagu, brzinu i koordinaciju — svaki mjesec uz novi plan i novu sportsku disciplinu. Broj mjesta je ograničen.",
+        en: "Through play and a variety of sports, your child builds motor skills, strength, speed, and coordination — with a new plan and a new sport every month. Places are limited.",
       },
     };
   }

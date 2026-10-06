@@ -41,7 +41,7 @@ export function HomeHero() {
   return (
     <section
       ref={containerRef}
-      className="relative isolate flex min-h-[85vh] items-end overflow-hidden bg-navy-950 text-white"
+      className="relative isolate flex min-h-[85svh] items-end overflow-hidden bg-navy-950 text-white"
     >
       <motion.div aria-hidden className="absolute inset-0" style={{ y: parallaxY }}>
         <Image

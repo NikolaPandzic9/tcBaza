@@ -30,9 +30,9 @@ export const routing = defineRouting({
       bs: "/usluge/komercijalna-teretana",
       en: "/services/commercial-gym",
     },
-    "/usluge/kik-boks": {
-      bs: "/usluge/kik-boks",
-      en: "/services/kickboxing",
+    "/usluge/sportski-pasos": {
+      bs: "/usluge/sportski-pasos",
+      en: "/services/sports-passport",
     },
     "/usluge/online-program": {
       bs: "/usluge/online-program",

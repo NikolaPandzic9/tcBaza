@@ -94,4 +94,25 @@
     background-color: var(--color-accent-500);
     color: var(--color-navy-950);
   }
+
+  /* One consistent keyboard-focus indicator. currentColor keeps it
+     visible on both the navy (white text) and light (navy text)
+     surfaces without per-component overrides. */
+  :where(a, button, summary, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+  }
+}
+
+/* clip-path clips everything outside the shape — including a normal
+   outline — so the diagonal-cut controls would show no focus at all.
+   An inset two-tone ring is drawn inside the shape instead: the white
+   band reads on dark fills, the navy band on light/lime ones. Unlayered
+   on purpose, so it wins over Tailwind's ring utilities while focused. */
+.clip-corner:focus-visible,
+.clip-corner-lg:focus-visible {
+  outline: none;
+  box-shadow:
+    inset 0 0 0 2px #fff,
+    inset 0 0 0 4px var(--color-navy-950);
 }

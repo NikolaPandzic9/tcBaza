@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, Send } from "lucide-react";
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 import type { Locale } from "@/i18n/routing";
 import { submitContactForm, type ContactFormState } from "@/lib/actions/contactActions";
 import { buttonBaseClasses, buttonVariantClasses } from "@/components/ui/buttonStyles";
@@ -34,6 +34,9 @@ const LABELS = {
 
 const EMPTY_VALUES = { name: "", email: "", phone: "", message: "" };
 
+const INPUT_CLASSES =
+  "mt-1.5 w-full border border-charcoal-300 bg-white px-4 py-3 text-base text-charcoal-900 transition-colors focus:border-navy-700 focus:outline-none focus:ring-2 focus:ring-navy-700/25 aria-[invalid=true]:border-status-full-text sm:text-sm";
+
 export function ContactForm({ locale }: ContactFormProps) {
   const t = LABELS[locale];
   const boundAction = submitContactForm.bind(null, locale);
@@ -55,13 +58,21 @@ export function ContactForm({ locale }: ContactFormProps) {
     if (state.status === "success") setValues(EMPTY_VALUES);
   }
 
+  // After a failed submit, move focus to the first invalid field so
+  // keyboard and screen-reader users land right on what needs fixing.
+  const formRef = useRef<HTMLFormElement>(null);
+  useEffect(() => {
+    if (state.status !== "error" || !state.fieldErrors) return;
+    formRef.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [state]);
+
   function updateField(field: keyof typeof values) {
     return (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
       setValues((prev) => ({ ...prev, [field]: e.target.value }));
   }
 
   return (
-    <form action={formAction} className="space-y-5" noValidate>
+    <form ref={formRef} action={formAction} className="space-y-5" noValidate>
       {/* Honeypot — hidden from sighted users, real inputs go untouched by bots that skip type="hidden" but still fill visible-looking fields. */}
       <div className="absolute left-[-9999px]" aria-hidden="true">
         <label htmlFor="website">Website</label>
@@ -76,6 +87,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           id="name"
           name="name"
           type="text"
+          autoComplete="name"
           required
           minLength={2}
           maxLength={100}
@@ -83,7 +95,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           onChange={updateField("name")}
           aria-invalid={Boolean(state.fieldErrors?.name)}
           aria-describedby={state.fieldErrors?.name ? "name-error" : undefined}
-          className="mt-1.5 w-full border border-charcoal-300 bg-white px-4 py-2.5 text-sm text-charcoal-900 focus:border-navy-700 focus:outline-none"
+          className={INPUT_CLASSES}
         />
         {state.fieldErrors?.name && (
           <p id="name-error" className="mt-1 text-xs text-status-full-text">
@@ -100,12 +112,14 @@ export function ContactForm({ locale }: ContactFormProps) {
           id="email"
           name="email"
           type="email"
+          autoComplete="email"
+          inputMode="email"
           required
           value={values.email}
           onChange={updateField("email")}
           aria-invalid={Boolean(state.fieldErrors?.email)}
           aria-describedby={state.fieldErrors?.email ? "email-error" : undefined}
-          className="mt-1.5 w-full border border-charcoal-300 bg-white px-4 py-2.5 text-sm text-charcoal-900 focus:border-navy-700 focus:outline-none"
+          className={INPUT_CLASSES}
         />
         {state.fieldErrors?.email && (
           <p id="email-error" className="mt-1 text-xs text-status-full-text">
@@ -122,10 +136,12 @@ export function ContactForm({ locale }: ContactFormProps) {
           id="phone"
           name="phone"
           type="tel"
+          autoComplete="tel"
+          inputMode="tel"
           maxLength={30}
           value={values.phone}
           onChange={updateField("phone")}
-          className="mt-1.5 w-full border border-charcoal-300 bg-white px-4 py-2.5 text-sm text-charcoal-900 focus:border-navy-700 focus:outline-none"
+          className={INPUT_CLASSES}
         />
       </div>
 
@@ -144,7 +160,7 @@ export function ContactForm({ locale }: ContactFormProps) {
           onChange={updateField("message")}
           aria-invalid={Boolean(state.fieldErrors?.message)}
           aria-describedby={state.fieldErrors?.message ? "message-error" : undefined}
-          className="mt-1.5 w-full border border-charcoal-300 bg-white px-4 py-2.5 text-sm text-charcoal-900 focus:border-navy-700 focus:outline-none"
+          className={INPUT_CLASSES}
         />
         {state.fieldErrors?.message && (
           <p id="message-error" className="mt-1 text-xs text-status-full-text">
@@ -171,17 +187,18 @@ export function ContactForm({ locale }: ContactFormProps) {
         )}
       </button>
 
-      {state.status !== "idle" && (
-        <p
-          role="status"
-          className={cn(
-            "text-sm font-medium",
-            state.status === "success" ? "text-status-free-text" : "text-status-full-text",
-          )}
-        >
-          {state.message}
-        </p>
-      )}
+      {/* Always mounted: a live region only announces changes to content
+          it already contained, not its own first appearance. */}
+      <p
+        role="status"
+        aria-live="polite"
+        className={cn(
+          "text-sm font-medium empty:hidden",
+          state.status === "success" ? "text-status-free-text" : "text-status-full-text",
+        )}
+      >
+        {state.status !== "idle" ? state.message : ""}
+      </p>
     </form>
   );
 }

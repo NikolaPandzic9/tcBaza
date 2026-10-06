@@ -18,14 +18,15 @@ interface PriceLine {
 }
 
 export interface RecoveryService {
-  slug: "masaza" | "hladna-kupka" | "kompresivne-cizme" | "kombinovani-paket";
+  /** Stable key for React lists (the ERP document id once in the database). */
+  slug: string;
   name: Localized;
   duration: Localized | null;
   prices: PriceLine[];
   benefits: Localized[];
 }
 
-export const RECOVERY_SERVICES: RecoveryService[] = [
+export const DEFAULT_RECOVERY_SERVICES: RecoveryService[] = [
   {
     slug: "masaza",
     name: { bs: "Masaža", en: "Massage" },

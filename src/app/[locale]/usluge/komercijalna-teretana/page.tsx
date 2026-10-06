@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { getProgram, getStartingPriceLabel } from "@/content/programs";
-import { PROGRAM_DETAILS } from "@/content/programDetails";
+import { buildPageMetadata } from "@/lib/seo";
+import { getStartingPriceLabel } from "@/content/programs";
 import { ProgramDetailTemplate } from "@/components/programs/ProgramDetailTemplate";
+import { getProgramPage } from "@/server/site/content";
 
 const SLUG = "komercijalna-teretana" as const;
 
@@ -13,16 +15,20 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
-  const program = getProgram(SLUG);
-  const priceLabel = getStartingPriceLabel(program, locale);
+  const isBs = locale === "bs";
+  const page = await getProgramPage(SLUG);
+  if (!page) return {};
+  const priceLabel = getStartingPriceLabel(page.program, locale);
+  const { info } = page.content;
 
-  return {
-    title:
-      locale === "bs"
-        ? `Komercijalna teretana — ${priceLabel}`
-        : `Open Gym Access — ${priceLabel}`,
-    description: program.shortPitch[locale],
-  };
+  return buildPageMetadata({
+    locale,
+    path: page.program.href,
+    title: isBs ? `Teretana — članarina ${priceLabel}` : `Open gym — membership ${priceLabel}`,
+    description: isBs
+      ? `Opremljena teretana u Istočnom Sarajevu za samostalan trening, svaki dan ${info.hours.opens}–${info.hours.closes}, u terminima van grupnih treninga. Članarina ${priceLabel}.`
+      : `A fully equipped gym in Istočno Sarajevo for independent training, every day ${info.hours.opens}–${info.hours.closes}, outside group-session slots. Membership ${priceLabel}.`,
+  });
 }
 
 export default async function KomercijalnaTeretanaPage({
@@ -33,11 +39,16 @@ export default async function KomercijalnaTeretanaPage({
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
 
+  // Hidden in the ERP → the page is gone until it's shown again.
+  const page = await getProgramPage(SLUG);
+  if (!page) notFound();
+
   return (
     <ProgramDetailTemplate
-      program={getProgram(SLUG)}
-      detail={PROGRAM_DETAILS[SLUG]}
+      program={page.program}
+      detail={page.detail}
       locale={locale}
+      info={page.content.info}
     />
   );
 }

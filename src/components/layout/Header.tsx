@@ -2,7 +2,7 @@
 
 import { Menu } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import type { Locale } from "@/i18n/routing";
 import { isNavLinkActive, NAV_LINKS } from "@/lib/navLinks";
@@ -18,6 +18,7 @@ export function Header() {
   const locale = useLocale() as Locale;
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const closeMobileNav = useCallback(() => setMobileOpen(false), []);
 
   return (
     <header className="sticky top-0 z-40 shadow-[0_1px_0_0_rgba(255,255,255,0.08)]">
@@ -32,7 +33,7 @@ export function Header() {
 
       <div className="bg-navy-700">
         <Container className="flex h-16 items-center justify-between gap-4 sm:h-20">
-          <Logo />
+          <Logo priority />
 
           <nav
             aria-label={t("mainNav")}
@@ -68,6 +69,8 @@ export function Header() {
               type="button"
               onClick={() => setMobileOpen(true)}
               aria-label={t("openMenu")}
+              aria-expanded={mobileOpen}
+              aria-controls="mobile-nav"
               className="p-2 text-white xl:hidden"
             >
               <Menu className="size-6" aria-hidden />
@@ -76,7 +79,7 @@ export function Header() {
         </Container>
       </div>
 
-      <MobileNav open={mobileOpen} onClose={() => setMobileOpen(false)} />
+      <MobileNav open={mobileOpen} onClose={closeMobileNav} />
     </header>
   );
 }

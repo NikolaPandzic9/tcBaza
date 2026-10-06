@@ -1,3 +1,5 @@
+import { DEFAULT_CONTACT } from "@/lib/constants";
+import type { FaqItem } from "./programDetails";
 import type { Localized } from "./programs";
 
 export const HERO = {
@@ -93,3 +95,72 @@ export const FINAL_CTA = {
     en: "Get in touch and book your initial assessment — no obligation, no pressure.",
   } satisfies Localized,
 };
+
+export const LOCATION = {
+  eyebrow: { bs: "Lokacija", en: "Location" } satisfies Localized,
+  headline: { bs: "Gdje se nalazimo", en: "Where to find us" } satisfies Localized,
+  serviceArea: {
+    bs: "Na usluzi smo svima iz Istočnog Sarajeva — Lukavice, Istočne Ilidže i Istočnog Novog Sarajeva — kao i iz Sarajeva, Pala i okoline.",
+    en: "We welcome everyone from Istočno Sarajevo — Lukavica, Istočna Ilidža, and Istočno Novo Sarajevo — as well as Sarajevo, Pale, and the surrounding area.",
+  } satisfies Localized,
+  hoursLabel: { bs: "Svaki dan", en: "Every day" } satisfies Localized,
+};
+
+/** General questions for the home page. Every answer restates facts
+ * published elsewhere on the site (prices, hours, group size, address). */
+export const DEFAULT_HOME_FAQ: FaqItem[] = [
+  {
+    question: {
+      bs: "Gdje se nalazi Trening centar Baza?",
+      en: "Where is Trening centar Baza?",
+    },
+    answer: {
+      bs: `Na adresi ${DEFAULT_CONTACT.street}, ${DEFAULT_CONTACT.city}. Na usluzi smo svima iz Istočnog Sarajeva, Lukavice, Sarajeva, Pala i okoline.`,
+      en: `At ${DEFAULT_CONTACT.street}, ${DEFAULT_CONTACT.city}. We welcome everyone from Istočno Sarajevo, Lukavica, Sarajevo, Pale, and the surrounding area.`,
+    },
+  },
+  {
+    question: { bs: "Kakvo je radno vrijeme?", en: "What are your opening hours?" },
+    answer: {
+      bs: `Otvoreni smo svaki dan od ${DEFAULT_CONTACT.hours.opens} do ${DEFAULT_CONTACT.hours.closes}.`,
+      en: `We're open every day from ${DEFAULT_CONTACT.hours.opens} to ${DEFAULT_CONTACT.hours.closes}.`,
+    },
+  },
+  {
+    question: {
+      bs: "Koliko košta trening i članarina?",
+      en: "How much do training and membership cost?",
+    },
+    answer: {
+      bs: "Grupni treninzi za rekreativce i sportiste koštaju od 150 KM mjesečno, članarina za teretanu 50 KM, Sportski pasoš za djecu 80 KM mjesečno, a usluge oporavka od 15 KM.",
+      en: "Group training for recreational members and athletes starts at 150 KM per month, open gym membership is 50 KM, the Sports Passport kids program is 80 KM per month, and recovery services start at 15 KM.",
+    },
+  },
+  {
+    question: {
+      bs: "Koliko ljudi trenira u jednoj grupi?",
+      en: "How many people train in one group?",
+    },
+    answer: {
+      bs: "Najviše 5 članova, uz stručnog trenera na svakom treningu. Svaki član ima individualni plan napravljen nakon inicijalnog testiranja.",
+      en: "Up to 5 members, with a qualified trainer at every session. Every member has an individual plan built after an initial assessment.",
+    },
+  },
+  {
+    question: { bs: "Imate li program za djecu?", en: "Do you have a program for kids?" },
+    answer: {
+      bs: "Da — Sportski pasoš. Kroz igru i raznovrsne sportske aktivnosti djeca razvijaju motoriku, snagu, brzinu i koordinaciju, a svaki mjesec upoznaju novu sportsku disciplinu. Cijena je 80 KM mjesečno, broj mjesta je ograničen.",
+      en: "Yes — Sports Passport. Through play and a variety of sports, kids build motor skills, strength, speed, and coordination, and discover a new sport every month. It costs 80 KM per month, and places are limited.",
+    },
+  },
+  {
+    question: {
+      bs: "Kako da zakažem prvi trening?",
+      en: "How do I book my first session?",
+    },
+    answer: {
+      bs: `Pozovi ${DEFAULT_CONTACT.phone} ili nam piši na WhatsApp ili Instagram (${DEFAULT_CONTACT.instagramHandle}). Prvi korak je inicijalno testiranje — bez obaveze, bez pritiska.`,
+      en: `Call ${DEFAULT_CONTACT.phone} or message us on WhatsApp or Instagram (${DEFAULT_CONTACT.instagramHandle}). The first step is an initial assessment — no obligation, no pressure.`,
+    },
+  },
+];

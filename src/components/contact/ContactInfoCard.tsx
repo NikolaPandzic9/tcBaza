@@ -1,13 +1,14 @@
-import { Clock, MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Navigation, Phone } from "lucide-react";
 import type { Locale } from "@/i18n/routing";
-import { BUSINESS } from "@/lib/constants";
+import type { SiteInfo } from "@/lib/siteInfo";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
 
 interface ContactInfoCardProps {
   locale: Locale;
+  info: SiteInfo;
 }
 
-export function ContactInfoCard({ locale }: ContactInfoCardProps) {
+export function ContactInfoCard({ locale, info }: ContactInfoCardProps) {
   return (
     <div className="clip-corner-lg bg-navy-700 p-7 text-white sm:p-8">
       <h2 className="font-display text-lg uppercase tracking-wide">
@@ -15,24 +16,33 @@ export function ContactInfoCard({ locale }: ContactInfoCardProps) {
       </h2>
 
       <div className="mt-6 space-y-5 text-sm">
-        <a href={BUSINESS.phoneHref} className="flex items-center gap-3 hover:text-accent-500">
+        <a href={info.phoneHref} className="flex items-center gap-3 hover:text-accent-500">
           <Phone className="size-5 shrink-0" aria-hidden />
-          {BUSINESS.phone}
+          {info.phone}
         </a>
 
-        <p className="flex gap-3">
+        <address className="flex gap-3 not-italic">
           <MapPin className="size-5 shrink-0 translate-y-0.5" aria-hidden />
           <span>
-            {BUSINESS.address.street}
+            {info.address.street}
             <br />
-            {BUSINESS.address.city}, {BUSINESS.address.country}
+            {info.address.city}, {info.address.country}
+            <a
+              href={info.mapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-2 flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-accent-500 hover:text-white"
+            >
+              <Navigation className="size-3.5" aria-hidden />
+              {locale === "bs" ? "Otvori u mapama" : "Open in Maps"}
+            </a>
           </span>
-        </p>
+        </address>
 
         <p className="flex items-center gap-3">
           <Clock className="size-5 shrink-0" aria-hidden />
           <span>
-            {BUSINESS.hours.opens}–{BUSINESS.hours.closes}{" "}
+            {info.hours.opens}–{info.hours.closes}{" "}
             <span className="text-white/60">
               ({locale === "bs" ? "svaki dan" : "every day"})
             </span>
@@ -40,13 +50,13 @@ export function ContactInfoCard({ locale }: ContactInfoCardProps) {
         </p>
 
         <a
-          href={BUSINESS.instagramUrl}
+          href={info.instagramUrl}
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-3 hover:text-accent-500"
         >
           <InstagramIcon className="size-5 shrink-0" aria-hidden />
-          {BUSINESS.instagramHandle}
+          {info.instagramHandle}
         </a>
       </div>
     </div>

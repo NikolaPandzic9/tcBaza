@@ -2,7 +2,7 @@ import { ImageResponse } from "next/og";
 import { readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { BUSINESS } from "@/lib/constants";
+import { getSiteContent } from "@/server/site/content";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -13,6 +13,7 @@ export default async function OpengraphImage({
   params: Promise<{ locale: string }>;
 }) {
   const locale = await resolveLocale(params);
+  const { info } = await getSiteContent();
 
   const logoBuffer = await readFile(
     join(process.cwd(), "public/brand/logo-mark-white.png"),
@@ -59,7 +60,7 @@ export default async function OpengraphImage({
             color: "rgba(255,255,255,0.7)",
           }}
         >
-          {`${BUSINESS.address.city} · ${BUSINESS.address.country}`}
+          {`${info.address.city} · ${info.address.country}`}
         </div>
       </div>
     ),

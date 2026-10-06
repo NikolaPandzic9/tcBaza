@@ -1,4 +1,4 @@
-import { getSiteSettings, getTermini } from "@/sanity/queries";
+import { getSchedule } from "@/server/site/content";
 import type { Locale } from "@/i18n/routing";
 import { SCHEDULE_TEASER } from "@/content/home";
 import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
@@ -14,11 +14,10 @@ interface ScheduleTeaserProps {
 }
 
 export async function ScheduleTeaser({ locale }: ScheduleTeaserProps) {
-  const settings = await getSiteSettings();
-  if (!settings.terminiSectionEnabled) return null;
+  const schedule = await getSchedule();
+  if (!schedule.enabled) return null;
 
-  const termini = await getTermini();
-  const preview = termini.slice(0, PREVIEW_COUNT);
+  const preview = schedule.termini.slice(0, PREVIEW_COUNT);
 
   return (
     <section className="bg-navy-100 py-20 sm:py-28">
@@ -37,7 +36,7 @@ export async function ScheduleTeaser({ locale }: ScheduleTeaserProps) {
           <>
             <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {preview.map((termin) => (
-                <TerminCard key={termin._id} termin={termin} locale={locale} />
+                <TerminCard key={termin.id} termin={termin} locale={locale} />
               ))}
             </div>
             <div className="mt-10">

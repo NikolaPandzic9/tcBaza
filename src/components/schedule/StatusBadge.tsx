@@ -1,6 +1,6 @@
 import { CheckCircle2, Clock, MinusCircle, XCircle } from "lucide-react";
 import { Badge, type BadgeTone } from "@/components/ui/Badge";
-import type { TerminStatus } from "@/sanity/types";
+import type { TerminStatus } from "@/lib/schedule";
 
 const STATUS_CONFIG: Record<
   TerminStatus,

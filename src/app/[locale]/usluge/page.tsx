@@ -2,11 +2,12 @@ import { ArrowUpRight, Check } from "lucide-react";
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
+import { buildPageMetadata } from "@/lib/seo";
 import type { Pathnames } from "@/i18n/routing";
 import { Link } from "@/i18n/navigation";
-import { PROGRAMS, getStartingPriceLabel } from "@/content/programs";
-import { PROGRAM_DETAILS } from "@/content/programDetails";
-import { RECOVERY_INTRO, RECOVERY_SERVICES } from "@/content/recovery";
+import { getStartingPriceLabel } from "@/content/programs";
+import { RECOVERY_INTRO } from "@/content/recovery";
+import { getSiteContent } from "@/server/site/content";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
@@ -17,17 +18,18 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title:
-      locale === "bs"
-        ? "Usluge — grupni treninzi, priprema sportista, oporavak"
-        : "Services — group training, athlete prep, recovery",
-    description:
-      locale === "bs"
-        ? "Rekreativci, sportisti, komercijalna teretana, kik boks i oporavak — sve usluge Trening centra Baza u Istočnom Sarajevu."
-        : "Recreational, athletes, open gym access, kickboxing, and recovery — all of Trening centar Baza's services in Istočno Sarajevo.",
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/usluge",
+    title: isBs
+      ? "Usluge — treninzi, teretana, program za djecu"
+      : "Services — training, gym, kids program",
+    description: isBs
+      ? "Grupni treninzi za rekreativce, priprema sportista, Sportski pasoš za djecu, teretana, online program i oporavak — sve usluge Baze u Istočnom Sarajevu."
+      : "Recreational group training, athlete conditioning, Sports Passport for kids, open gym, online coaching, and recovery — all Baza services in Istočno Sarajevo.",
+  });
 }
 
 export default async function UslugePage({
@@ -37,6 +39,7 @@ export default async function UslugePage({
 }) {
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
+  const content = await getSiteContent();
 
   const cards: {
     href: Pathnames;
@@ -45,19 +48,19 @@ export default async function UslugePage({
     priceLabel: string;
     features: string[];
   }[] = [
-    ...PROGRAMS.map((program) => ({
+    ...content.programs.map((program) => ({
       href: program.href,
       name: program.name[locale],
       pitch: program.shortPitch[locale],
       priceLabel: getStartingPriceLabel(program, locale),
-      features: PROGRAM_DETAILS[program.slug].features.slice(0, 3).map((f) => f[locale]),
+      features: (content.details[program.slug]?.features ?? []).slice(0, 3).map((f) => f[locale]),
     })),
     {
       href: "/usluge/oporavak" as const,
       name: locale === "bs" ? "Oporavak" : "Recovery",
       pitch: RECOVERY_INTRO.body[locale],
       priceLabel: locale === "bs" ? "od 15 KM" : "from 15 KM",
-      features: RECOVERY_SERVICES.slice(0, 3).map((service) => service.name[locale]),
+      features: content.recovery.slice(0, 3).map((service) => service.name[locale]),
     },
   ];
 

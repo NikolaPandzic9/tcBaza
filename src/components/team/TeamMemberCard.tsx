@@ -24,13 +24,17 @@ export function TeamMemberCard({ member, locale }: TeamMemberCardProps) {
         type="button"
         onClick={() => setActive((current) => !current)}
         aria-pressed={active}
-        aria-label={member.name}
-        className="relative block aspect-[4/5] w-full overflow-hidden bg-navy-100 text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500"
+        aria-label={`${member.name} — ${member.role[locale]}`}
+        className="relative block aspect-[4/5] w-full overflow-hidden bg-navy-100 text-left focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-inset focus-visible:ring-accent-500"
       >
         {member.photo ? (
           <Image
             src={member.photo}
-            alt={member.name}
+            alt={
+              locale === "bs"
+                ? `${member.name}, ${member.role.bs.toLowerCase()} u Trening centru Baza`
+                : `${member.name}, ${member.role.en.toLowerCase()} at Trening centar Baza`
+            }
             fill
             sizes="(min-width: 1024px) 22vw, 45vw"
             className={cn(

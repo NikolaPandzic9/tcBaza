@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import type { Locale } from "@/i18n/routing";
-import type { Termin } from "@/sanity/types";
+import type { Termin } from "@/lib/schedule";
 import { ScheduleFilterBar } from "./ScheduleFilterBar";
 import { TerminCard } from "./TerminCard";
 
@@ -26,7 +26,7 @@ export function ScheduleGrid({ termini, locale }: ScheduleGridProps) {
       {filtered.length > 0 ? (
         <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {filtered.map((termin) => (
-            <TerminCard key={termin._id} termin={termin} locale={locale} />
+            <TerminCard key={termin.id} termin={termin} locale={locale} />
           ))}
         </div>
       ) : (

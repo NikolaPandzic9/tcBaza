@@ -1,9 +1,10 @@
-import { MapPin, Phone } from "lucide-react";
+import { Clock, MapPin, Phone } from "lucide-react";
 import { useTranslations } from "next-intl";
 import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import type { Pathnames } from "@/i18n/routing";
 import { BUSINESS } from "@/lib/constants";
+import type { SiteInfo } from "@/lib/siteInfo";
 import type { NavMessageKey } from "@/lib/navLinks";
 import { Container } from "@/components/ui/Container";
 import { InstagramIcon } from "@/components/ui/InstagramIcon";
@@ -20,7 +21,7 @@ const FOOTER_LINKS: { href: Pathnames; messageKey: NavMessageKey }[] = [
   { href: "/kontakt", messageKey: "contact" },
 ];
 
-export function Footer() {
+export function Footer({ info }: { info: SiteInfo }) {
   const t = useTranslations();
   const tNav = useTranslations("nav");
   const year = new Date().getFullYear();
@@ -51,22 +52,31 @@ export function Footer() {
         </nav>
 
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm text-white/75">
-          <a href={BUSINESS.phoneHref} className="flex items-center gap-2 transition-colors hover:text-white">
+          <a href={info.phoneHref} className="flex items-center gap-2 transition-colors hover:text-white">
             <Phone className="size-4 shrink-0 text-accent-500" aria-hidden />
-            {BUSINESS.phone}
+            {info.phone}
+          </a>
+          <a
+            href={info.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 transition-colors hover:text-white"
+          >
+            <MapPin className="size-4 shrink-0 text-accent-500" aria-hidden />
+            {info.address.street}, {info.address.city}
           </a>
           <span className="flex items-center gap-2">
-            <MapPin className="size-4 shrink-0 text-accent-500" aria-hidden />
-            {BUSINESS.address.city}, {BUSINESS.address.country}
+            <Clock className="size-4 shrink-0 text-accent-500" aria-hidden />
+            {info.hours.opens}–{info.hours.closes}
           </span>
           <a
-            href={BUSINESS.instagramUrl}
+            href={info.instagramUrl}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 transition-colors hover:text-white"
           >
             <InstagramIcon className="size-4 shrink-0 text-accent-500" aria-hidden />
-            {BUSINESS.instagramHandle}
+            {info.instagramHandle}
           </a>
         </div>
       </Container>

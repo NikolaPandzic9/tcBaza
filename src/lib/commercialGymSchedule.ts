@@ -1,4 +1,4 @@
-import type { Termin } from "@/sanity/types";
+import type { Termin } from "@/lib/schedule";
 
 export const DAYS_OF_WEEK = [
   "Ponedjeljak",
@@ -19,10 +19,6 @@ export interface DayBlockedWindows {
   dayOfWeek: (typeof DAYS_OF_WEEK)[number];
   windows: TimeWindow[];
 }
-
-/** Group sessions below this occupancy still leave the floor open to
- * commercial-gym members; at or above it, the group fills the space. */
-const CAPACITY_THRESHOLD = 3;
 
 function toMinutes(time: string): number {
   const [hours, minutes] = time.split(":").map(Number);
@@ -60,21 +56,25 @@ function mergeWindows(windows: TimeWindow[]): TimeWindow[] {
 
 /**
  * Derives when the floor is too full for commercial-gym (walk-in) access,
- * from the real group-training termini — there is no separate Sanity
- * content type for commercial-gym slots. A group session blocks the floor
- * only once it reaches 3+ occupied spots (out of however many max); below
+ * from the real group-training termini — there is no separate content type
+ * for commercial-gym slots. A group session blocks the floor only once it
+ * reaches the occupancy threshold (out of however many max); below
  * that, and at any time with no group session at all, the gym is open to
  * commercial members within business hours.
  *
  * Cancelled/upcoming-but-not-yet-running sessions ("Otkazano", "Uskoro")
  * don't reflect real current occupancy, so they're excluded.
  */
-export function getCommercialGymBlockedWindows(termini: Termin[]): DayBlockedWindows[] {
+/**
+ * `threshold`: occupied spots at which a group session takes over the floor
+ * (set in the ERP under Podešavanja; 3 by default).
+ */
+export function getCommercialGymBlockedWindows(termini: Termin[], threshold = 3): DayBlockedWindows[] {
   const blockingTermini = termini.filter(
     (termin) =>
       termin.active &&
       (termin.status === "Slobodno" || termin.status === "Popunjeno") &&
-      termin.maxParticipants - termin.spotsRemaining >= CAPACITY_THRESHOLD,
+      termin.maxParticipants - termin.spotsRemaining >= threshold,
   );
 
   return DAYS_OF_WEEK.map((dayOfWeek) => ({

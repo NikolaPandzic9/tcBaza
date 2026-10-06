@@ -1,56 +1,52 @@
 import type { MetadataRoute } from "next";
-import { SITE_URL } from "@/lib/constants";
+import { routing, type Pathnames } from "@/i18n/routing";
+import { PROGRAM_HREFS } from "@/content/programs";
+import { localizedUrl } from "@/lib/seo";
+import { getSiteContent } from "@/server/site/content";
 
-/** Canonical (bs) path paired with its localized English path. */
-const ROUTES: { bs: string; en: string; priority: number }[] = [
-  { bs: "/", en: "/en", priority: 1.0 },
-  { bs: "/o-nama", en: "/en/about", priority: 0.8 },
-  { bs: "/usluge", en: "/en/services", priority: 0.9 },
-  { bs: "/usluge/rekreativci", en: "/en/services/recreational", priority: 0.8 },
-  { bs: "/usluge/sportisti", en: "/en/services/athletes", priority: 0.8 },
-  {
-    bs: "/usluge/komercijalna-teretana",
-    en: "/en/services/commercial-gym",
-    priority: 0.8,
-  },
-  { bs: "/usluge/kik-boks", en: "/en/services/kickboxing", priority: 0.8 },
-  { bs: "/usluge/oporavak", en: "/en/services/recovery", priority: 0.8 },
-  {
-    bs: "/usluge/online-program",
-    en: "/en/services/online-program",
-    priority: 0.8,
-  },
-  { bs: "/clanarine-i-cijene", en: "/en/pricing", priority: 0.8 },
-  { bs: "/nas-tim", en: "/en/team", priority: 0.6 },
-  { bs: "/kontakt", en: "/en/contact", priority: 0.7 },
-  { bs: "/rezervacija-termina", en: "/en/schedule", priority: 0.9 },
-  {
-    bs: "/rezervacija-termina/komercijalna-teretana",
-    en: "/en/schedule/commercial-gym",
-    priority: 0.8,
-  },
-  { bs: "/partneri", en: "/en/partners", priority: 0.4 },
-  { bs: "/politika-privatnosti", en: "/en/privacy-policy", priority: 0.2 },
-  { bs: "/uslovi-koristenja", en: "/en/terms-of-use", priority: 0.2 },
-];
+/**
+ * Generated from routing.pathnames, so a renamed or added route can't be
+ * forgotten here. Priority reflects how close a page is to a booking
+ * decision; anything not listed defaults to 0.6.
+ */
+const PRIORITY: Partial<Record<Pathnames, number>> = {
+  "/": 1.0,
+  "/usluge": 0.9,
+  "/rezervacija-termina": 0.9,
+  "/usluge/rekreativci": 0.8,
+  "/usluge/sportisti": 0.8,
+  "/usluge/komercijalna-teretana": 0.8,
+  "/usluge/sportski-pasos": 0.8,
+  "/usluge/oporavak": 0.8,
+  "/usluge/online-program": 0.7,
+  "/clanarine-i-cijene": 0.8,
+  "/rezervacija-termina/komercijalna-teretana": 0.7,
+  "/kontakt": 0.7,
+  "/o-nama": 0.7,
+  "/partneri": 0.4,
+  "/politika-privatnosti": 0.2,
+  "/uslovi-koristenja": 0.2,
+};
 
-export default function sitemap(): MetadataRoute.Sitemap {
-  const entries: MetadataRoute.Sitemap = [];
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  // Program pages hidden in the ERP return 404 — keep them out.
+  const { programs } = await getSiteContent();
+  const visible = new Set<Pathnames>(programs.map((p) => p.href));
+  const hidden = new Set(Object.values(PROGRAM_HREFS).filter((href) => !visible.has(href)));
+  const paths = (Object.keys(routing.pathnames) as Pathnames[]).filter((path) => !hidden.has(path));
 
-  for (const route of ROUTES) {
-    const languages = { bs: `${SITE_URL}${route.bs}`, en: `${SITE_URL}${route.en}` };
+  return paths.flatMap((path) => {
+    const languages = {
+      bs: localizedUrl(path, "bs"),
+      en: localizedUrl(path, "en"),
+      "x-default": localizedUrl(path, "bs"),
+    };
 
-    entries.push({
-      url: `${SITE_URL}${route.bs}`,
-      priority: route.priority,
-      alternates: { languages: { ...languages, "x-default": languages.bs } },
-    });
-    entries.push({
-      url: `${SITE_URL}${route.en}`,
-      priority: route.priority,
-      alternates: { languages: { ...languages, "x-default": languages.bs } },
-    });
-  }
-
-  return entries;
+    return routing.locales.map((locale) => ({
+      url: languages[locale],
+      changeFrequency: path.startsWith("/rezervacija-termina") ? "daily" : "monthly",
+      priority: PRIORITY[path] ?? 0.6,
+      alternates: { languages },
+    }));
+  });
 }

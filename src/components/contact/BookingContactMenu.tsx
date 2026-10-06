@@ -5,7 +5,8 @@ import { CalendarCheck, ChevronRight, Phone } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Locale } from "@/i18n/routing";
-import { BUSINESS, WHATSAPP_NUMBER } from "@/lib/constants";
+import { getWhatsAppUrl } from "@/lib/siteInfo";
+import { useSiteInfo } from "@/components/site/SiteInfoProvider";
 import {
   buttonBaseClasses,
   buttonVariantClasses,
@@ -21,11 +22,6 @@ interface BookingContactMenuProps {
   variant?: ButtonVariant;
   className?: string;
 }
-
-const WHATSAPP_PREFILL = {
-  bs: "Zanima me termin za: ",
-  en: "I'm interested in a session for: ",
-};
 
 // Booking still runs through phone/message rather than an online system
 // (see HANDOVER.md) — this replaces a single bare "Pozovi" link with a
@@ -48,6 +44,7 @@ export function BookingContactMenu({
   const triggerRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
+  const info = useSiteInfo();
 
   useEffect(() => {
     if (!open) return;
@@ -59,17 +56,40 @@ export function BookingContactMenu({
       }
     }
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setOpen(false);
+      if (event.key === "Escape") {
+        setOpen(false);
+        triggerRef.current?.focus();
+        return;
+      }
+      // Standard menu keyboard pattern: arrows move between items.
+      if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+      const items = Array.from(
+        panelRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]') ?? [],
+      );
+      if (items.length === 0) return;
+      event.preventDefault();
+      const current = items.indexOf(document.activeElement as HTMLElement);
+      const delta = event.key === "ArrowDown" ? 1 : -1;
+      items[(current + delta + items.length) % items.length].focus({ preventScroll: true });
     }
     function handleScrollOrResize() {
       setOpen(false);
     }
+
+    // Move focus into the menu once it has mounted, so keyboard and
+    // screen-reader users land on the first option.
+    const focusFrame = requestAnimationFrame(() => {
+      panelRef.current
+        ?.querySelector<HTMLElement>('[role="menuitem"]')
+        ?.focus({ preventScroll: true });
+    });
 
     document.addEventListener("mousedown", handlePointerDown);
     document.addEventListener("keydown", handleKeyDown);
     window.addEventListener("scroll", handleScrollOrResize, true);
     window.addEventListener("resize", handleScrollOrResize);
     return () => {
+      cancelAnimationFrame(focusFrame);
       document.removeEventListener("mousedown", handlePointerDown);
       document.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("scroll", handleScrollOrResize, true);
@@ -98,10 +118,10 @@ export function BookingContactMenu({
     instagram: "Instagram",
     instagramHint: locale === "bs" ? "Otvori profil i pošalji poruku" : "Open the profile and send a DM",
     call: locale === "bs" ? "Pozovi" : "Call",
-    callHint: BUSINESS.phone,
+    callHint: info.phone,
   };
 
-  const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_PREFILL[locale])}`;
+  const whatsappUrl = getWhatsAppUrl(info, locale);
 
   const options = [
     {
@@ -114,7 +134,7 @@ export function BookingContactMenu({
     },
     {
       key: "instagram",
-      href: BUSINESS.instagramUrl,
+      href: info.instagramUrl,
       icon: <InstagramIcon className="size-5 shrink-0 text-navy-700" aria-hidden />,
       label: t.instagram,
       hint: t.instagramHint,
@@ -122,7 +142,7 @@ export function BookingContactMenu({
     },
     {
       key: "call",
-      href: BUSINESS.phoneHref,
+      href: info.phoneHref,
       icon: <Phone className="size-5 shrink-0 text-navy-700" aria-hidden />,
       label: t.call,
       hint: t.callHint,
@@ -166,7 +186,7 @@ export function BookingContactMenu({
                     target={option.external ? "_blank" : undefined}
                     rel={option.external ? "noopener noreferrer" : undefined}
                     onClick={() => setOpen(false)}
-                    className="group flex items-center gap-3 p-3 transition-colors hover:bg-navy-50"
+                    className="group flex items-center gap-3 p-3 transition-colors hover:bg-navy-50 focus-visible:bg-navy-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-navy-700"
                   >
                     {option.icon}
                     <span className="flex-1">

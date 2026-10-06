@@ -1,6 +1,6 @@
 import { Clock, Users } from "lucide-react";
 import type { Locale } from "@/i18n/routing";
-import type { Termin } from "@/sanity/types";
+import type { Termin } from "@/lib/schedule";
 import { StatusBadge } from "./StatusBadge";
 
 const DAY_LABELS: Record<string, { bs: string; en: string }> = {
@@ -29,7 +29,7 @@ export function TerminCard({ termin, locale }: TerminCardProps) {
       <div className="flex items-start justify-between gap-3">
         <div>
           <p className="font-display text-sm uppercase tracking-wide text-navy-900">
-            {termin.programName}
+            {termin.programName[locale]}
           </p>
           <p className="mt-1 text-sm text-charcoal-500">{dayLabel}</p>
         </div>

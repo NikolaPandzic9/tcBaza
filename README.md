@@ -1,14 +1,16 @@
 # Trening centar Baza
 
-Zvanični sajt Trening centra Baza (Istočno Sarajevo) — Next.js aplikacija sa dvojezičnim sadržajem (bosanski/engleski), Sanity CMS-om za raspored termina i Server Action kontakt formom.
+Zvanični sajt Trening centra Baza (Istočno Sarajevo) i interni ERP (erp.tcbaza.ba) — jedna Next.js aplikacija: dvojezični javni sajt (bosanski/engleski) i zaštićeni sistem za upravljanje sadržajem, terminima, članovima, uplatama i upitima.
 
 ## Tehnologije
 
 - [Next.js 16](https://nextjs.org) (App Router) + TypeScript (strict) + [Tailwind CSS v4](https://tailwindcss.com)
 - [next-intl](https://next-intl.dev) — lokalizovano rutiranje (bs bez prefiksa, `/en/...`)
-- [Sanity](https://sanity.io) — CMS za sistem termina, ugniježđen na `/studio`
-- [Resend](https://resend.com) — slanje kontakt forme
-- [Motion](https://motion.dev) — animacije
+- PostgreSQL ([Neon](https://neon.tech)) + [Drizzle ORM](https://orm.drizzle.team) — sadržaj sajta i ERP podaci
+- [Vercel Blob](https://vercel.com/storage/blob) — mediji (slike optimizovane sa sharp)
+- argon2id lozinke, sesije u bazi, zaštita od brute-force napada, audit log
+- [Resend](https://resend.com) — email obavještenja s kontakt forme (opciono)
+- [Motion](https://motion.dev) — animacije · [Vitest](https://vitest.dev) — testovi
 
 ## Pokretanje lokalno
 
@@ -16,42 +18,51 @@ Preduslovi: Node.js 20+, npm.
 
 ```bash
 npm install
-cp .env.example .env.local   # popuni stvarne vrijednosti
-npm run dev                  # http://localhost:3000
+cp .env.example .env.local   # popuni ERP_ADMIN_PASSWORD
+npm run db:dev               # lokalni PostgreSQL (port 5433), ostavi da radi
+npm run db:migrate           # tabele, uvoz početnog sadržaja, početni admin
+npm run dev
 ```
 
-Sajt radi i bez popunjenih env varijabli — funkcije koje zavise od njih (raspored termina, kontakt forma, analitika) su tada isključene, bez pada aplikacije.
+- Sajt: http://localhost:3000
+- ERP: http://erp.localhost:3000
+
+Sajt radi i bez baze (`DATABASE_URL` prazan) — tada prikazuje ugrađeni sadržaj iz `src/content/`.
 
 ## Skripte
 
 | Skripta | Opis |
 |---|---|
-| `npm run dev` | Pokreće razvojni server |
-| `npm run build` | Produkcioni build |
+| `npm run dev` | Razvojni server |
+| `npm run build` | Migracije baze + produkcioni build |
 | `npm run start` | Pokreće produkcioni build lokalno |
 | `npm run typecheck` | Provjera TypeScript tipova |
 | `npm run lint` | ESLint provjera |
+| `npm test` | Testovi (zasebna testna baza) |
+| `npm run db:dev` | Lokalni PostgreSQL server |
+| `npm run db:migrate` | Primjena migracija + seed |
+| `npm run db:generate` | Nova migracija nakon izmjene šeme |
 
-Prije svakog push-a: `npm run typecheck && npm run lint && npm run build`.
+Prije svakog push-a: `npm run typecheck && npm run lint && npm test && npm run build`.
 
 ## Struktura projekta
 
 ```
 src/
-  app/            App Router rute — [locale]/ za javne stranice, studio/ za Sanity Studio
-  components/     UI komponente, grupisane po domeni (layout, home, schedule, ...)
-  content/        Statički sadržaj stranica (cijene, timovi, opisi usluga...)
-  i18n/           next-intl rutiranje i navigacija
-  lib/            Pomoćne funkcije, konstante, validacija
-  sanity/         Sanity klijent, šeme i upiti
-messages/         Prevodi za UI tekstove (bs.json, en.json)
-public/           Statički fajlovi i optimizovane slike
+  app/
+    [locale]/     javni sajt
+    erp/          ERP (dostupan samo na erp.* poddomeni)
+    media/        lokalno serviranje uploada (razvoj)
+  components/     UI komponente (sajt + erp/)
+  content/        ugrađeni (početni) sadržaj i statični tekstovi stranica
+  server/         baza, autentifikacija, sadržaj, mediji, članovi, upiti
+  proxy.ts        rutiranje po hostu (sajt / ERP) + jezici
+drizzle/          SQL migracije
+scripts/          lokalna baza, migracije
+tests/            Vitest testovi
+docs/ERP.md       ERP: moduli, sigurnost, deploy, DNS, SSL
 ```
 
 ## Deploy
 
-Aplikacija je pripremljena za [Vercel](https://vercel.com) — svaki push na glavnu granu pokreće novi deploy. Potrebne environment varijable su navedene u `.env.example`.
-
-## CMS
-
-Raspored termina se uređuje na `/studio` (Sanity Studio), bez potrebe za izmjenom koda.
+Vercel (sajt + ERP u jednom projektu), Neon PostgreSQL i Vercel Blob. Detaljno uputstvo, DNS za `erp.tcbaza.ba` i SSL: [docs/ERP.md](docs/ERP.md).

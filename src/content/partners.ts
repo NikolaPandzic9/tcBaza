@@ -10,9 +10,7 @@ export interface Partner {
   url?: string;
 }
 
-// Kik boks klub Slavija's logo hasn't been supplied yet — see
-// HANDOVER.md: requesting it is a pre-launch follow-up.
-export const PARTNERS: Partner[] = [
+export const DEFAULT_PARTNERS: Partner[] = [
   {
     name: "KMF Tango",
     category: { bs: "Sportski partner", en: "Sports partner" },
@@ -21,15 +19,6 @@ export const PARTNERS: Partner[] = [
       en: "Partner of Trening centar Baza.",
     },
     logo: "/brand/partner-kmf-tango.jpg",
-  },
-  {
-    name: "Kik boks klub Slavija",
-    category: { bs: "Sportski partner", en: "Sports partner" },
-    description: {
-      bs: "U saradnji sa Bazom organizuje treninge kik boksa, tri puta sedmično.",
-      en: "Runs kickboxing sessions in partnership with Baza, three times a week.",
-    },
-    logo: null,
   },
   {
     name: "Studio Devet",

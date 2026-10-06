@@ -46,8 +46,11 @@ export const GOAL_QUESTION = {
       },
     },
     {
-      value: "kik-boks",
-      label: { bs: "Zanima me kik boks", en: "I'm interested in kickboxing" },
+      value: "dijete",
+      label: {
+        bs: "Tražim sportski program za dijete",
+        en: "I'm looking for a sports program for my child",
+      },
     },
   ] satisfies QuizOption<Goal>[],
 };

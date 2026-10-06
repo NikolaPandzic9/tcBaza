@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
+import { buildPageMetadata } from "@/lib/seo";
 import {
   ABOUT_APPROACH,
   ABOUT_CHARACTERISTICS,
@@ -10,8 +11,7 @@ import {
   ABOUT_INTRO,
   HOW_IT_WORKS,
 } from "@/content/about";
-import { PROGRAMS } from "@/content/programs";
-import { TEAM } from "@/content/team";
+import { getSiteContent } from "@/server/site/content";
 import { AboutParallaxImage } from "@/components/about/AboutParallaxImage";
 import { AboutStats } from "@/components/about/AboutStats";
 import { Container } from "@/components/ui/Container";
@@ -26,14 +26,16 @@ export async function generateMetadata({
   const locale = await resolveLocale(params);
   const isBs = locale === "bs";
 
-  return {
+  return buildPageMetadata({
+    locale,
+    path: "/o-nama",
     title: isBs
-      ? "O nama — mali grupni treninzi u Istočnom Sarajevu"
-      : "About us — small-group training in Istočno Sarajevo",
+      ? "O nama — trening centar u Istočnom Sarajevu"
+      : "About us — training center in Istočno Sarajevo",
     description: isBs
-      ? "Baza je trening centar sa grupama do 5 članova i individualnim planom nakon testiranja. Upoznaj koncept rada."
-      : "Baza is a training center with groups of up to 5 members and an individual plan after assessment. Meet the concept.",
-  };
+      ? "Upoznaj Bazu: grupe do 5 članova, inicijalno testiranje i individualni plan treninga za svakog člana. Trening centar u Istočnom Sarajevu."
+      : "Meet Baza: groups of up to 5, an initial assessment, and an individual training plan for every member. A training center in Istočno Sarajevo.",
+  });
 }
 
 export default async function AboutPage({
@@ -43,13 +45,14 @@ export default async function AboutPage({
 }) {
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
+  const content = await getSiteContent();
   const isBs = locale === "bs";
 
   const stats = [
     { value: "5", label: isBs ? "Maks. članova po grupi" : "Max members per group" },
-    { value: String(TEAM.length), label: isBs ? "Ljudi u timu" : "People on the team" },
+    { value: String(content.team.length), label: isBs ? "Ljudi u timu" : "People on the team" },
     {
-      value: String(PROGRAMS.length + 1),
+      value: String(content.programs.length + 1),
       label: isBs ? "Programa i usluga" : "Programs & services",
     },
   ];

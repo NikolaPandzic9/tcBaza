@@ -1,11 +1,28 @@
 import type { Pathnames } from "@/i18n/routing";
 
-export type ProgramSlug =
-  | "rekreativci"
-  | "sportisti"
-  | "komercijalna-teretana"
-  | "kik-boks"
-  | "online-program";
+export const PROGRAM_SLUGS = [
+  "rekreativci",
+  "sportisti",
+  "komercijalna-teretana",
+  "sportski-pasos",
+  "online-program",
+] as const;
+
+export type ProgramSlug = (typeof PROGRAM_SLUGS)[number];
+
+/** Each program has its own page (fixed route) — the ERP edits the
+ * content, the URL stays here. */
+export const PROGRAM_HREFS: Record<ProgramSlug, Pathnames> = {
+  rekreativci: "/usluge/rekreativci",
+  sportisti: "/usluge/sportisti",
+  "komercijalna-teretana": "/usluge/komercijalna-teretana",
+  "sportski-pasos": "/usluge/sportski-pasos",
+  "online-program": "/usluge/online-program",
+};
+
+export function isProgramSlug(value: string): value is ProgramSlug {
+  return (PROGRAM_SLUGS as readonly string[]).includes(value);
+}
 
 export interface Localized {
   bs: string;
@@ -28,9 +45,9 @@ export interface Program {
   tiers: PricingTier[];
 }
 
-const MONTHLY_PERIOD: Localized = { bs: "KM/mjesečno", en: "KM/month" };
+export const MONTHLY_PERIOD: Localized = { bs: "KM/mjesečno", en: "KM/month" };
 
-export const PROGRAMS: Program[] = [
+export const DEFAULT_PROGRAMS: Program[] = [
   {
     slug: "rekreativci",
     href: "/usluge/rekreativci",
@@ -95,23 +112,19 @@ export const PROGRAMS: Program[] = [
     ],
   },
   {
-    slug: "kik-boks",
-    href: "/usluge/kik-boks",
-    name: { bs: "Kik boks", en: "Kickboxing" },
+    slug: "sportski-pasos",
+    href: "/usluge/sportski-pasos",
+    name: { bs: "Sportski pasoš", en: "Sports Passport" },
     shortPitch: {
-      bs: "Treninzi kik boksa u saradnji sa Kik boks klubom Slavija, od septembra.",
-      en: "Kickboxing sessions run in partnership with Kik boks klub Slavija, starting in September.",
+      bs: "Sportski program za djecu: kroz igru, stručan rad i raznovrsne sportske aktivnosti razvijaju motoriku, snagu, brzinu i koordinaciju.",
+      en: "A sports program for kids: through play, expert coaching, and a variety of sports, they build motor skills, strength, speed, and coordination.",
     },
     tiers: [
       {
-        id: "kik-boks",
-        label: {
-          bs: "Ponedjeljak, srijeda, petak — 18:00–19:30",
-          en: "Monday, Wednesday, Friday — 6:00–7:30 PM",
-        },
-        // Not published by the client — never invent a figure here.
-        price: null,
-        sessionsPerWeek: 3,
+        id: "sportski-pasos",
+        label: { bs: "Mjesečna članarina", en: "Monthly membership" },
+        price: { amount: 80, period: MONTHLY_PERIOD },
+        sessionsPerWeek: null,
       },
     ],
   },
@@ -135,10 +148,8 @@ export const PROGRAMS: Program[] = [
   },
 ];
 
-export function getProgram(slug: ProgramSlug): Program {
-  const program = PROGRAMS.find((p) => p.slug === slug);
-  if (!program) throw new Error(`Unknown program slug: ${slug}`);
-  return program;
+export function findProgram(programs: Program[], slug: ProgramSlug): Program | undefined {
+  return programs.find((p) => p.slug === slug);
 }
 
 /** "od 150 KM/mjesečno", or a contact prompt when no tier has a published price. */

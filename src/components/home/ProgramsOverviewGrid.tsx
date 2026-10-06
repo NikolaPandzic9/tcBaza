@@ -3,7 +3,7 @@
 import { motion, type Variants } from "motion/react";
 import { useLocale, useTranslations } from "next-intl";
 import type { Locale } from "@/i18n/routing";
-import { PROGRAMS, getStartingPriceLabel } from "@/content/programs";
+import { getStartingPriceLabel, type Program } from "@/content/programs";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { LinkButton } from "@/components/ui/LinkButton";
@@ -20,7 +20,7 @@ const item: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" } },
 };
 
-export function ProgramsOverviewGrid() {
+export function ProgramsOverviewGrid({ programs }: { programs: Program[] }) {
   const locale = useLocale() as Locale;
   const t = useTranslations("cta");
   const reducedMotion = useReducedMotion();
@@ -44,7 +44,7 @@ export function ProgramsOverviewGrid() {
           viewport={{ once: true, margin: "-10%" }}
           className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3"
         >
-          {PROGRAMS.map((program) => (
+          {programs.map((program) => (
             <motion.div key={program.slug} variants={reducedMotion ? undefined : item}>
               <ProgramCard
                 program={program}

@@ -5,6 +5,8 @@ import type { Locale } from "@/i18n/routing";
 import { sendContactEmail } from "@/lib/email/sendContactEmail";
 import { isRateLimited } from "@/lib/rateLimit";
 import { contactSchema } from "@/lib/validation/contactSchema";
+import { getDb, hasDatabase } from "@/server/db/client";
+import { createInquiry, markInquiryEmailed } from "@/server/inquiries";
 
 export interface ContactFormState {
   status: "idle" | "success" | "error";
@@ -77,11 +79,33 @@ export async function submitContactForm(
     return { status: "success", message: t.success };
   }
 
-  try {
-    await sendContactEmail(parsed.data);
-  } catch {
-    return { status: "error", message: t.serverError };
+  const inquiry = {
+    name: parsed.data.name,
+    email: parsed.data.email,
+    phone: parsed.data.phone,
+    message: parsed.data.message,
+  };
+
+  // The ERP inbox is the record of truth; email is a notification on top.
+  // Either one succeeding means the message reached the team.
+  let saved: { id: string } | null = null;
+  if (hasDatabase) {
+    try {
+      saved = await createInquiry(getDb(), { ...inquiry, locale });
+    } catch (error) {
+      console.error("Upit nije sačuvan u bazi:", error);
+    }
   }
 
+  let emailed = false;
+  try {
+    await sendContactEmail(inquiry);
+    emailed = true;
+  } catch {
+    // Not configured or provider error — the saved inquiry still counts.
+  }
+  if (saved && emailed) await markInquiryEmailed(getDb(), saved.id).catch(() => {});
+
+  if (!saved && !emailed) return { status: "error", message: t.serverError };
   return { status: "success", message: t.success };
 }

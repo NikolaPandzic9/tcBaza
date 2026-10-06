@@ -4,6 +4,7 @@ import { AnimatePresence } from "motion/react";
 import { useLocale } from "next-intl";
 import { useState } from "react";
 import type { Locale } from "@/i18n/routing";
+import type { Program } from "@/content/programs";
 import { AGE_QUESTION, EXPERIENCE_QUESTION, GOAL_QUESTION, QUIZ_INTRO } from "@/content/quiz";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
@@ -18,7 +19,7 @@ import {
   type QuizAnswers,
 } from "./quizLogic";
 
-export function ProgramQuiz() {
+export function ProgramQuiz({ programs }: { programs: Program[] }) {
   const locale = useLocale() as Locale;
   const [answers, setAnswers] = useState<QuizAnswers>(INITIAL_ANSWERS);
 
@@ -79,7 +80,7 @@ export function ProgramQuiz() {
                 />
               )}
               {step === "result" && result && (
-                <QuizResultCard key="result" result={result} locale={locale} onReset={reset} />
+                <QuizResultCard key="result" result={result} programs={programs} locale={locale} onReset={reset} />
               )}
             </AnimatePresence>
           </div>

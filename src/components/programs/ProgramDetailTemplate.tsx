@@ -1,40 +1,47 @@
-import { Check } from "lucide-react";
+import { Check, MapPin, Navigation } from "lucide-react";
 import Image from "next/image";
 import type { Locale } from "@/i18n/routing";
-import type { Program } from "@/content/programs";
+import { getStartingPriceLabel, type Program } from "@/content/programs";
 import type { ProgramDetail } from "@/content/programDetails";
 import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
+import { FaqSection } from "@/components/seo/FaqSection";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { Container } from "@/components/ui/Container";
 import { SectionEyebrow } from "@/components/ui/SectionEyebrow";
 import { VertebraeDivider } from "@/components/ui/VertebraeDivider";
 import { buttonBaseClasses, buttonVariantClasses } from "@/components/ui/buttonStyles";
 import { PricingTable } from "@/components/pricing/PricingTable";
-import { getServiceSchema } from "@/lib/serviceSchema";
+import type { SiteInfo } from "@/lib/siteInfo";
+import { getProgramSchemas } from "@/lib/serviceSchema";
 import { cn } from "@/lib/cn";
 
 interface ProgramDetailTemplateProps {
   program: Program;
   detail: ProgramDetail;
   locale: Locale;
+  info: SiteInfo;
 }
 
 export function ProgramDetailTemplate({
   program,
   detail,
   locale,
+  info,
 }: ProgramDetailTemplateProps) {
   const t = {
     services: locale === "bs" ? "Usluge" : "Services",
     quiz: locale === "bs" ? "Pronađi svoj program" : "Find your program",
+    where: locale === "bs" ? "Gdje treniramo" : "Where we train",
+    directions: locale === "bs" ? "Otvori u mapama" : "Open in Maps",
   };
 
   return (
     <main className="bg-navy-50">
-      <JsonLd data={getServiceSchema(program, locale)} />
+      <JsonLd data={getProgramSchemas(program, locale, info)} />
       <Container>
         <Breadcrumbs
+          locale={locale}
           items={[
             { label: t.services, href: "/usluge" },
             { label: program.name[locale], href: program.href },
@@ -75,8 +82,15 @@ export function ProgramDetailTemplate({
               />
             </div>
           ) : (
-            <div className="relative flex aspect-[4/5] w-full items-center justify-center clip-corner-lg bg-navy-700">
-              <VertebraeDivider className="h-16 w-2/3 text-white/20" />
+            <div className="relative flex aspect-[4/5] w-full flex-col items-center justify-center gap-6 overflow-hidden clip-corner-lg bg-navy-700 p-8 text-center">
+              <VertebraeDivider className="pointer-events-none absolute inset-x-0 top-1/2 h-16 w-full -translate-y-1/2 text-white/10" />
+              <p className="relative font-display text-4xl uppercase leading-none text-white sm:text-5xl">
+                {program.name[locale]}
+              </p>
+              <span aria-hidden className="clip-corner relative block h-1.5 w-16 bg-accent-500" />
+              <p className="relative font-display text-lg uppercase tracking-wide text-accent-500">
+                {getStartingPriceLabel(program, locale)}
+              </p>
             </div>
           )}
         </Container>
@@ -105,9 +119,36 @@ export function ProgramDetailTemplate({
             <div className="mt-6">
               <PricingTable tiers={program.tiers} locale={locale} />
             </div>
+
+            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 clip-corner bg-navy-50 px-6 py-5 ring-1 ring-charcoal-200">
+              <p className="flex items-start gap-3 text-sm text-charcoal-700">
+                <MapPin className="mt-0.5 size-5 shrink-0 text-accent-ink-700" aria-hidden />
+                <span>
+                  <span className="block font-semibold text-navy-900">{t.where}</span>
+                  {info.address.street}, {info.address.city}
+                </span>
+              </p>
+              <a
+                href={info.mapsUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wide text-navy-700 underline decoration-accent-500 decoration-2 underline-offset-4 hover:text-navy-900"
+              >
+                <Navigation className="size-3.5" aria-hidden />
+                {t.directions}
+              </a>
+            </div>
           </div>
         </Container>
       </section>
+
+      {detail.faq && detail.faq.length > 0 && (
+        <section className="py-16 sm:py-20">
+          <Container className="max-w-3xl">
+            <FaqSection items={detail.faq} locale={locale} />
+          </Container>
+        </section>
+      )}
     </main>
   );
 }

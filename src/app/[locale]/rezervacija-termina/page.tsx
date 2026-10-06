@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { getSiteSettings, getTermini } from "@/sanity/queries";
+import { buildPageMetadata } from "@/lib/seo";
+import { getSchedule } from "@/server/site/content";
 import { BookingContactMenu } from "@/components/contact/BookingContactMenu";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
@@ -15,17 +16,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title:
-      locale === "bs"
-        ? "Grupni treninzi — trenutni raspored"
-        : "Group training — current schedule",
-    description:
-      locale === "bs"
-        ? "Trenutni raspored grupnih treninga u Trening centru Baza — mjesta ograničena na 5 članova po grupi."
-        : "The current group-training schedule at Trening centar Baza — spots capped at 5 members per group.",
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/rezervacija-termina",
+    title: isBs ? "Raspored grupnih treninga" : "Group training schedule",
+    description: isBs
+      ? "Trenutni raspored grupnih treninga u Trening centru Baza, Istočno Sarajevo — mjesta su ograničena na 5 članova po grupi. Zakaži termin pozivom ili porukom."
+      : "The current group-training schedule at Trening centar Baza, Istočno Sarajevo — spots are capped at 5 members per group. Book by phone or message.",
+  });
 }
 
 export default async function SchedulePage({
@@ -36,8 +36,8 @@ export default async function SchedulePage({
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
 
-  const settings = await getSiteSettings();
-  const termini = settings.terminiSectionEnabled ? await getTermini() : [];
+  const schedule = await getSchedule();
+  const termini = schedule.enabled ? schedule.termini : [];
 
   const t = {
     eyebrow: locale === "bs" ? "Termini" : "Schedule",
@@ -65,7 +65,7 @@ export default async function SchedulePage({
           <ScheduleSectionTabs active="grupni" locale={locale} />
         </div>
 
-        {!settings.terminiSectionEnabled ? (
+        {!schedule.enabled ? (
           <div className="mt-12 clip-corner-lg bg-white p-8 text-center shadow-sm ring-1 ring-charcoal-200 sm:p-12">
             <p className="text-charcoal-500">{t.disabled}</p>
             <div className="mt-5 flex justify-center">

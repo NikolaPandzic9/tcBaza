@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { setRequestLocale } from "next-intl/server";
 import { resolveLocale } from "@/i18n/resolveLocale";
-import { PARTNERS } from "@/content/partners";
+import { buildPageMetadata } from "@/lib/seo";
+import { getSiteContent } from "@/server/site/content";
 import { Container } from "@/components/ui/Container";
 import { PageHeader } from "@/components/ui/PageHeader";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
@@ -14,14 +15,16 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const locale = await resolveLocale(params);
+  const isBs = locale === "bs";
 
-  return {
-    title: locale === "bs" ? "Partneri" : "Partners",
-    description:
-      locale === "bs"
-        ? "Partneri Trening centra Baza: KMF Tango, Kik boks klub Slavija i Studio Devet."
-        : "Trening centar Baza's partners: KMF Tango, Kik boks klub Slavija, and Studio Devet.",
-  };
+  return buildPageMetadata({
+    locale,
+    path: "/partneri",
+    title: isBs ? "Partneri" : "Partners",
+    description: isBs
+      ? "Partneri Trening centra Baza iz Istočnog Sarajeva: KMF Tango i Studio Devet."
+      : "Partners of Trening centar Baza in Istočno Sarajevo: KMF Tango and Studio Devet.",
+  });
 }
 
 export default async function PartnersPage({
@@ -31,6 +34,7 @@ export default async function PartnersPage({
 }) {
   const locale = await resolveLocale(params);
   setRequestLocale(locale);
+  const content = await getSiteContent();
 
   return (
     <main className="bg-navy-50 pb-20 pt-10 sm:pb-28 sm:pt-14">
@@ -41,7 +45,7 @@ export default async function PartnersPage({
         />
 
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PARTNERS.map((partner, index) => {
+          {content.partners.map((partner, index) => {
             const card = (
               <>
                 <div className="flex h-28 items-center justify-center clip-corner bg-navy-50 ring-1 ring-charcoal-100">
