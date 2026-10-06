@@ -15,7 +15,7 @@ import {
   defaultSiteSettings,
   defaultTeam,
 } from "./content/defaults";
-import { hashPassword, validatePasswordStrength } from "./auth/password";
+import { hashPassword } from "./auth/password";
 
 const SEED_MARKER = "content_seeded_at";
 
@@ -96,8 +96,6 @@ export async function ensureInitialAdmin(db: Database, log: (msg: string) => voi
     log("UPOZORENJE: nema korisnika, a ERP_ADMIN_PASSWORD nije postavljen — početni admin nije kreiran.");
     return false;
   }
-  const weakness = validatePasswordStrength(password, username);
-  if (weakness) throw new Error(`ERP_ADMIN_PASSWORD nije dovoljno jaka: ${weakness}`);
 
   const [user] = await db
     .insert(users)
